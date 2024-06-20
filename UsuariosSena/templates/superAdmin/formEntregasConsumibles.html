@@ -1,0 +1,160 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/styleFormPrestamosConsumibles.css' %}">
+{% endblock extrastyle %}
+
+
+
+{% block title %}
+Formulario Entregas
+{% endblock title %}
+
+<!-- Inicio del Forumlario-->
+{% block content %}
+
+<div class="signupFrm">
+    <form action="/formEntregasConsumibles/" class="form" method="post">
+        <h1 class="title">Entregas</h1>
+
+        {% csrf_token %}
+
+        <div class="container-1">
+            <div class="inputContainer">
+                <input list="usuariosList" pattern="^\S.*$" type="text" class="inputform" placeholder="responsable_Entrega"
+                    name="responsable_Entrega" autocomplete="off" value="{{ form_data.responsable_Entrega|default:'' }}"
+                    required>
+                <label for="responsable_Entrega" class="labelform">Responsable de la entrega</label>
+                <datalist id="usuariosList">
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.nombres }} {{ usuario.apellidos }}">
+                        {{ usuario.numeroIdentificacion }}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="inputContainer">
+                <input list="usuariosListRecibe" id="nombre_solicitante" pattern="^\S.*$" type="text" class="inputform input-bold"
+                    placeholder="nombre_solicitante" name="nombre_solicitante"
+                    value="{{ form_data.nombre_solicitante|default:'' }}" autocomplete="off"
+                    value="{{ form_data.nombre_solicitante|default:'' }}" required>
+                <label for="nombre_solicitante" class="labelform">Nombre del Solicitante</label>
+                <datalist id="usuariosListRecibe">
+
+                    <option value="{{ usuario_pinned.nombres }} {{ usuario_pinned.apellidos }}">
+                        {{ usuario_pinned.numeroIdentificacion }}</option>
+
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.nombres }} {{ usuario.apellidos }}">
+                        {{ usuario.numeroIdentificacion }}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="inputContainerIDelemento">
+                <input list="elementosList" type="text" pattern="^\S.*$" id="idElementoInput" class="inputform" placeholder="idC"
+                    name="idC" autocomplete="off" value="{{ form_data.idC|default:'' }}" required>
+                <label for="idC" class="labelform">Digite nombre o ID elemento</label>
+                <datalist id="elementosList">
+                    {% for elemento in elementos %}
+                    <option value="{{ elemento.id }}">
+                        {{ elemento.nombreElemento }} {% if elemento.disponible == 0 %} --> AGOTADO {% endif %}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="inputContainerIDelemento">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="nombreElemento" id="nombreElementoInput"
+                    name="nombreElemento" value="{{ form_data.nombreElemento|default:'' }}" autocomplete="off" readonly
+                    required>
+                <label for="" class="labelform">Nombre Elemento</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="Disponibles" id="disponiblesInput" name="disponibles"
+                    value="{{ form_data.disponibles|default:'' }}" readonly>
+                <label for="cantidadElemento" class="labelform">Disponible</label>
+            </div>
+            <div class="selectContainer">
+                <input type="number" class="inputcantidad" pattern="^\S.*$" name="cantidadElemento" id="cantidadElemento"
+                    value="{{ form_data.cantidadElemento }}" required>
+                <label for="cantidadElemento" class="labelcantidad">Cantidad</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="observaciones_prestamo" name="observaciones_prestamo"
+                    id="observaciones_prestamo" value="{{ form_data.observaciones_prestamo }}" required>
+                <label for="observaciones_prestamo" class="labelform">Observaciones</label>
+            </div>
+            <div class="selectorimagen">
+                <label for="soporte" class="labelsubirfoto">Firma Digital</label>
+                <input type="file" accept="image/*" class="inputsubirfoto">
+
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="container-botones">
+                <button type="submit" class="submitBtn">GUARDAR</button>
+                <button type="button" class="submitBtn" onclick="confirmCancel()">CANCELAR</button>
+
+            </div>
+        </div>
+    </form>
+
+</div>
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{% static 'js/validarSeleccionElementoPorID.js'%}"></script>
+<script src="{% static 'js/rellenarCampos.js'%}"></script>
+<script src="{% static 'js/calculoTotal.js'%}"></script>
+<script>
+    // Javascript para los datalist de usuarios
+    document.addEventListener('DOMContentLoaded', function () {
+        var usuarios = [
+            {% for usuario in usuarios %}
+            {
+            nombres: "{{ usuario.nombres }}",
+            apellidos: "{{ usuario.apellidos }}",
+            numeroIdentificacion: "{{ usuario.numeroIdentificacion }}",
+            rol: "{{ usuario.get_rol_display }}"
+        },
+        {% endfor %}
+        ];
+
+    // Asume que usuario_pinned está definido y tiene las propiedades nombres, apellidos y rol
+    var usuarioPineado = {
+        nombres: "{{ usuario_pinned.nombres }}",
+        apellidos: "{{ usuario_pinned.apellidos }}",
+        rol: "{{ usuario_pinned.get_rol_display }}"
+    };
+
+    function actualizarOpcionesUsuarios() {
+        var opcionesUsuariosEntrega = '';
+        var opcionesUsuariosRecibe = '';
+
+        // Usuario "pineado" solo para el datalist de "Nombre del Solicitante"
+        opcionesUsuariosRecibe += '<option value="' + usuarioPineado.nombres + ' ' + usuarioPineado.apellidos + '">' + usuarioPineado.numeroIdentificacion + ' - ' + usuarioPineado.rol + '</option>';
+
+        usuarios.forEach(function (usuario) {
+            var nombreCompleto = usuario.nombres + ' ' + usuario.apellidos;
+            var textoOpcion = nombreCompleto + ' - ' + usuario.rol;
+            opcionesUsuariosEntrega += '<option value="' + nombreCompleto + '">' + textoOpcion + '</option>';
+            opcionesUsuariosRecibe += '<option value="' + nombreCompleto + '">' + textoOpcion + '</option>';
+        });
+
+        document.getElementById('usuariosList').innerHTML = opcionesUsuariosEntrega;
+        document.getElementById('usuariosListRecibe').innerHTML = opcionesUsuariosRecibe;
+    }
+
+    actualizarOpcionesUsuarios();
+
+        // Aquí puedes agregar los otros eventos y funciones que necesitas, como el evento 'input' en '#idElementoInput'
+        // y la lógica para limpiar campos cuando este input esté vacío, etc.
+    });
+</script>
+{% endblock extrajs %}
+{% endblock %}

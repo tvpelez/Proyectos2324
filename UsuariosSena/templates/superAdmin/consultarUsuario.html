@@ -1,0 +1,370 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+{% block title %}
+Consultar Usuarios
+{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/modal.css' %}">
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesregusuario.css' %}">
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock extrastyle %}
+<!--Script Contenido Estilos de Tailwindcss-->
+{% block extrascript %}
+<script>
+  const botonEliminar = (numeroIdentificacion) => {
+    Swal.fire({
+      "title": "¿Estás seguro de inhabilitar el usuario?",
+      "text": "El usuario perdera todos los permisos",
+      "icon": "question",
+      "showCancelButton": true,
+      "cancelButtonText": "Cancelar",
+      "confirmButtonText": "Inhabilitar",
+      "reverseButtons": true,
+      "confirmButtonColor": "#fc7323",
+      "iconColor": "#fc7323",
+    })
+      .then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "/eliminarUsuario/" + numeroIdentificacion;
+        }
+      })
+  }
+</script>
+<script>
+  // Función para abrir el modal y mostrar la información del usuario
+  function openModal(userData) {
+    const modal = document.getElementById('userModal');
+    const userDataContainer = document.getElementById('userData');
+
+    // Llenar el contenido del modal con los datos del usuario
+    userDataContainer.innerHTML = userData;
+
+    modal.style.display = 'block';
+  }
+
+  // Función para cerrar el modal
+  function closeModal() {
+    const modal = document.getElementById('userModal');
+    modal.style.display = 'none';
+  }
+
+   // Cierra el modal si se hace clic fuera de él
+   window.onclick = function (event) {
+    const modal = document.getElementById('userModal');
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+
+{% endblock extrascript %}
+
+{% block content %}
+
+<section class="bg-white  shadow-xl rounded-md p-4 overflow-hidden m-4 ">
+
+  <h1 class="text-[1.5rem] m-2 mb-10 font-extrabold ">Consultar Usuarios</h1>
+
+  <!--Barra de Busqueda-->
+  <div class="flex mb-10 items-center w-full h-[1rem] max-w-md " x-data="{ search: '' }">
+    <div class="w-full ">
+      <input type="search" class="w-full px-4 py-1 text-gray-800 rounded rounded-lg focus:outline-orange-500" id="filtroEdad"
+        placeholder="Filtrar por: Nombre... Apellido... correo... " onkeyup="filtrarTabla()" x-model="search">
+    </div>
+    <div>
+      <button type="submit" class="flex items-center bg-orange-500 justify-center w-12 h-12 text-white rounded-r-lg"
+      :class="(search.length > 0) ? 'bg-purple-500' : 'bg-gray-500 cursor-not-allowed'"
+        :disabled="search.length == 0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+      
+    </div>
+    <div class="imgretorno">
+      <a href="/usuariodash/" >
+        <img src="{% static 'img/flecha-atras.png' %}" alt="" >
+    </a>
+    </div>
+  </div>
+  
+  <div class="flex flex-col overflow-x-auto mt-8">
+    <div class="py-2 -my-2  sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div class="inline-block min-w-full scroll-auto overflow-hidden align-middle sm:rounded-lg">
+
+        <!--Datatable se crea tabla con scrool maximo del conrenedor disponible, con 12 enunciados en la cabecera-->
+        <table class="table-auto  overflow-scroll-hidden w-full" id="tablaPersonas">
+          <thead>
+            <tr>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Nombres</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Apellidos</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Tipo Doc</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Numero ID</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Correo Sena</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Celular</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Rol</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Tipo Cuentadante</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Tipo Contrato</th>
+              <th
+                class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Duracion Contrato</th>
+              <th
+                class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Estado</th>
+              <th
+                class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            {% for usuario in usuarios %}
+            <tr>
+              <td
+                class="text-[0.7rem]  leading-5 truncate  text-gray-900 px-3 py-2 whitespace-no-wrap border-b border-gray-200"
+                contenteditable="true">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.nombres }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.apellidos }}
+                </div>
+              </td>
+              <td class=" truncate px-3 text-center py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.tipoIdentificacion }}
+
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.numeroIdentificacion }}
+
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.email }}
+
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.celular }}
+
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">
+                  
+                {% if usuario.rol == 'superAdmin' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-orange-800 bg-orange-100 rounded-full">
+                  SuperAdmin</span>
+                {% elif usuario.rol == 'I' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                  Instructor</span>
+                {% elif usuario.rol == 'M' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-yellow-800 bg-yellow-100 rounded-full">
+                  Monitor</span>
+                {% endif %}
+              </td>
+              <td class=" truncate px-3 py-2  text-center whitespace-no-wrap border-b border-gray-200">
+                {% if usuario.cuentadante == 'adminS' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-cyan-800 bg-cyan-100 rounded-full">
+                  AdminS</span>
+                {% elif usuario.cuentadante == 'adminD' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-emerald-800 bg-emerald-100 rounded-full">
+                  AdminD</span>
+                {% elif usuario.cuentadante == 'monitor' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                  Monitor</span>
+                {% endif %}
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">
+                {% if usuario.tipoContrato == 'P' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-lime-800 bg-lime-100 rounded-full">
+                  Planta</span>
+                {% elif usuario.tipoContrato == 'C' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-teal-800 bg-teal-100 rounded-full">
+                  Contratista</span>
+                {% elif usuario.tipoContrato == 'A' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-indigo-800 bg-indigo-100 rounded-full">
+                  Aprendiz</span>
+                {% endif %}
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ usuario.duracionContrato }}
+
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 text-center whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">
+                {% if usuario.is_active == True %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                  Activo</span>
+                {% elif usuario.is_active == False %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.7rem] font-semibold leading-5 text-red-800 bg-red-100 rounded-full">
+                  Inactivo</span>
+
+                {% endif %}
+              </td>
+
+              <!--Botones de Visualizar Editar y ELiminar-->
+              <td
+                class="flex  px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200 gap-2">
+                <button title= "Visualizar Usuario" onclick="openModal('{{usuario.nombres}}, {{usuario.apellidos}}, {{usuario.tipoIdentificacion}}, {{usuario.celular}},  {{usuario.rol}}, {{usuario.numeroIdentificacion }}, {{ usuario.email }}')">
+                  <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" />
+                    <path d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                    <path d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                      fill="#42ade2" />
+                    <path d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                      fill="#231f20" />
+                  </svg>
+                </button>
+
+                {% if request.user.cuentadante == 'superAdmin' %}
+                <button title= "Editar Usuario" onclick="">
+                  <a href="/editarUsuario/{{usuario.numeroIdentificacion}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" href="/DonProyecto/editarUsuario.html"
+                      class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </a>
+                </button>
+                <button title= "Inhabilitar Eliminado" onclick="botonEliminar('{{usuario.numeroIdentificacion}}')">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              
+                {% endif %}
+                  
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Modal para mostrar la información del usuario -->
+
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <thead>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </thead>
+      <div id="userData">
+        <table>
+          <tr>
+            <th>Nombre:</th>
+            <td><input type="text" id="nombreField" readonly></td>
+          </tr>
+          <tr>
+            <th>Apellido:</th>
+            <td><input type="text" id="apellidoField" readonly></td>
+          </tr>
+          <tr>
+            <th>Tipo de Identificación:</th>
+            <td><input type="text" id="tipoIdentificacionField" readonly></td>
+          </tr>
+          <tr>
+            <th>Número de Identificación:</th>
+            <td><input type="text" id="numeroIdentificacionField" readonly></td>
+          </tr>
+          <tr>
+            <th>Telefono:</th>
+            <td><input type="text" id="celularField" readonly></td>
+          </tr>
+          <tr>
+            <th>Rol:</th>
+            <td><input type="text" id="rolField" readonly></td>
+          </tr>
+          <tr>
+            <th>Correo SENA:</th>
+            <td><input type="text" id="correoSenaField" readonly></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block extrajs %}
+
+<script src="{% static 'js/scriptConsultarUsuario.js' %}"></script>
+
+<script>
+  // Función para abrir el modal y mostrar la información del usuario
+  function openModal(userData) {
+    const modal = document.getElementById('userModal');
+
+    const userDataArray = userData.split(', ');
+
+    const nombreField = document.getElementById('nombreField');
+    const apellidoField = document.getElementById('apellidoField');
+    const tipoIdentificacionField = document.getElementById('tipoIdentificacionField');
+    const celularField = document.getElementById('celularField');
+    const rolField = document.getElementById('rolField');
+    const numeroIdentificacionField = document.getElementById('numeroIdentificacionField');
+    const correoSenaField = document.getElementById('correoSenaField');
+
+    nombreField.value = userDataArray[0] ;
+    apellidoField.value = userDataArray[1];
+    tipoIdentificacionField.value = userDataArray[2];
+    celularField.value = userDataArray[3];
+    rolField.value = userDataArray[4];
+    numeroIdentificacionField.value = userDataArray[5];
+    correoSenaField.value = userDataArray[6];
+    modal.style.display = 'block';
+  }
+
+  // Función para cerrar el modal
+  function closeModal() {
+    const modal = document.getElementById('userModal');
+    modal.style.display = 'none';
+  }
+
+  // Cierra el modal si se hace clic fuera de él
+  window.onclick = function (event) {
+    const modal = document.getElementById('userModal');
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+{% endblock extrajs %}
+{% endblock %}

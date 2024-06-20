@@ -1,0 +1,109 @@
+{% extends '../superAdmin/basesuadmin.html' %}
+
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesFormElem.css' %}">
+{% endblock extrastyle %}
+
+
+{% block title %}
+Registrar Elementos
+{% endblock title %}
+
+
+{% block content %}
+
+
+<!-- Inicio del Forumlario-->
+
+<div class="signupFrm">
+    <form action="/formElementos/" class="form" method="post" enctype="multipart/form-data">
+        <h1 class="title">Registrar Elemento</h1>
+        {% csrf_token %}
+
+        <div class="container-1">
+            <!-- Campos para Producto -->
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="Nombre del Producto" pattern="^\S.*$" name="nombre"
+                    value="{{ form_data.nombre }}" required>
+                <label for="nombre" class="labelform">Nombre del Producto</label>
+            </div>
+
+            <div class="selectContainer">
+                <label for="categoria" class="labelformselect">Categoría</label>
+                <select class="selector" name="categoria" id="categoria">
+                    <option value="D">Devolutivo</option>
+                    <option value="C">Consumible</option>
+                </select>
+            </div>
+            <div class="selectContainer">
+                <label for="estado" class="labelformselect">Estado</label>
+                <select class="selector" name="estado" id="estado">
+                    <option value="D">Disponible</option>
+                    <option value="G">Garantia</option>
+                    <option value="B">Baja</option>
+                </select>
+            </div>
+            <div class="selectContainer">
+                <input type="number" class="inputcantidad" name="cantidadElemento" pattern="^\S.*$" value="{{ cantidadElemento }}"
+                    id="cantidadElemento" min="1" required>
+                <label for="cantidadElemento" class="labelcantidad">Cantidad</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputformvalor" pattern="^\S.*$" placeholder="a" name="valor_unidad"
+                    value="{{ form_data.valor_unidad }}" id="valorUnidad" required>
+                <label for="valor_unidad" class="labelformvalor">Valor Unidad</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputformvalor" pattern="^\S.*$" placeholder="a" name="valorTotalElemento"
+                    id="valorTotalElemento" readonly>
+                <label for="valorTotalElemento" class="labelformvalor">Valor Total</label>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <!-- Campos para Inventario -->
+            <div class="inputContainer">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="Número de Serie" name="serial"
+                    value="{{ form_data.serial }}" id="serialInput" required>
+                <label for="serial" class="labelform">Número de Serie</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="Descripción del Producto" name="descripcion"
+                    value="{{ form_data.descripcion }}" required>
+                <label for="descripcion" class="labelform">Características del Producto</label>
+            </div>
+
+            <div class="inputContainer">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="Observaciones" name="observacion"
+                    value="{{ form_data.observacion }}" required>
+                <label for="observacion" class="labelform">Observaciones</label>
+            </div>
+
+            <div class="selectorimagen">
+                <input type="file" accept="image/*" pattern="^\S.*$" class="inputsubirfoto" name="factura">
+                <label for="factura" class="labelsubirfoto">Adjuntar Soporte</label>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <div class="container-botones">
+                <button type="submit" class="submitBtn">GUARDAR</button>
+                <button type="button" class="submitBtn" id="cancelBtn">CANCELAR</button>
+
+            </div>
+        </div>
+        <script>
+            document.getElementById("cancelBtn").onclick = function () {
+                window.location.href = "/elementosdash/";
+            };
+        </script>
+    </form>
+</div>
+</section>
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{% static 'js/calculoTotal.js'%}"></script>
+{% endblock extrajs %}
+{% endblock %}

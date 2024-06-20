@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %} Base S.A {% endblock title %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/superAdmin/estilobase.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% block extrastyle %}
+
+    {% endblock extrastyle %}
+
+
+    {% block extrascript %}
+    
+    {% endblock extrascript %}
+
+
+
+</head>
+
+<body class="cabeza">
+    <header>
+        <div class="header">
+            <div class="img">
+                <img src="{% static 'img/Copia de LOGO SSIH.svg' %}" alt="logo sena">
+            </div>
+            <span class="material-icons-sharp" id="hambur">
+                menu
+            </span>
+            <div class="usuario">
+            
+                <img src="{% static 'img/usuario.png' %}" alt="Usuario">
+            </div>
+
+
+        </div>
+    </header>
+
+    <body>
+        <section class="base">
+            <div class="barra-lateral" id="barra">
+                <a href="#" class="logo">
+                    <div class="nombre-logo">
+                        <img src="{% static 'img/SSoft.png' %}" alt="">
+                        <span class="material-icons-sharp" id="menu-toggle">menu</span>
+                        <!-- Cambiado el ID a menu-toggle -->
+                    </div>
+
+                    <ul class="menu" id="menu"> <!-- Cambiado el ID a menu -->
+                        <li><a href="{% url 'homedash' %}"><span class="material-icons-sharp">home</span><p>Inicio</p> </a></li>
+                        <li><a href="{% url 'usuariodash' %}"><span class="material-icons-sharp">supervisor_account</span><p>Usuarios</p> </a></li>
+                        <li><a href="{% url 'inventariodash' %}"><span class="material-icons-sharp">inventory</span><p>Inventario</p> </a></li>
+                        <li><a href="{% url 'elementosdash' %}"><span class="material-icons-sharp">category</span><p>Elementos</p> </a></li>
+                        <li><a href="{% url 'transacciondash' %}"><span class="material-icons-sharp">swap_horiz</span><p>Transacciones</p></a></li>
+                        <li><a href="{% url 'calendario' %}"><span class="material-icons-sharp">calendar_month</span><p>Calendario</p></a></li>
+                    </ul>
+
+                    <ul class="menu">
+                        <li><a href="{%url 'usu:logout'%}" class="salir" style="color: red;"><span style="color: red;"
+                                    class="material-icons-sharp">logout</span>
+                                <p>Salir</p>
+                            </a></li>
+
+                    </ul>
+
+
+                </a>
+                
+            </div>
+            <div class="redes-sociales">
+                <a href="https://www.facebook.com/senacditidosquebradas/?locale=es_LA" target="_blank"><img src="{% static 'img/facebook.png' %}" alt=""></a>
+
+                <a href="https://www.instagram.com/bienestaralaprendizcditi/?hl=es" target="_blank"><img src="{% static 'img/instagram.png' %}" alt=""></a>
+
+                <a href="https://twitter.com/senacditi/status/913841534172368897?lang=es" target="_blank"><img src="{% static 'img/gorjeo.png' %}" alt=""></a>
+            </div>
+
+
+
+            <div class="titulo">
+                <img src="{% static 'img/senaL.png' %}" alt="" width="40px
+                    ">
+                <h3>Gestion de inventario</h3>
+            </div>
+
+            <div class="perfil">
+                <p>
+                    {% if request.user.is_authenticated %}
+                    {{ request.user.nombres }} {{ request.user.apellidos }} <br>
+                    {{ request.user.cuentadante }}</p>
+                    {% endif %}
+                <div class="bola">
+
+                </div>
+            </div>
+
+            <div class="redes">
+                <div class="log">
+                    <img src="{% static 'img/SSIH.png' %}" alt="">
+                </div>
+            </div>
+
+            <div class="contenido" id="contenedor">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+
+        </section>
+
+        <script src="{% static 'js/scriptbase.js' %}">
+        </script>
+
+
+
+
+        {% block extrajs %}
+
+        {% endblock extrajs %}
+
+
+        <!-- alert sweet2 -->
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        {% if messages %}
+        {% for message in messages %}
+        <script>
+            var messageType = "{{ message.tags }}";
+            var messageText = "{{ message }}";
+            var confirmButtonText = "Aceptar";
+
+            if (messageType === "success") {
+                Swal.fire({
+                    title: 'Éxito',
+                    text: messageText,
+                    icon: 'success',
+                    confirmButtonText: confirmButtonText
+                });
+            } else if (messageType === "warning") {
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: messageText,
+                    icon: 'warning',
+                    confirmButtonText: confirmButtonText,
+                })
+                    ;
+
+            } else if (messageType === "error") {
+                Swal.fire({
+                    title: 'Error',
+                    text: messageText,
+                    icon: 'error',
+                    confirmButtonText: confirmButtonText
+                });
+            } else if (messageType === "info") {
+                Swal.fire({
+                    title: 'Información',
+                    text: messageText,
+                    icon: 'info',
+                    confirmButtonText: confirmButtonText
+                });
+            } else {
+                // Mensaje personalizado para cualquier otro tipo
+                Swal.fire({
+                    title: 'Mensaje personalizado',
+                    text: messageText,
+                    icon: 'info',
+                    confirmButtonText: confirmButtonText
+                });
+            }
+        </script>
+        {% endfor %}
+        {% endif %}
+
+        <!-- fin  alert sweet2 -->
+
+    </body>
+
+</html>

@@ -1,0 +1,68 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+                        
+{% load static %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/styleEditarPrestamo.css' %}">    
+{% endblock extrastyle %}
+    
+
+
+{% block title %}
+    Editar Prestamos
+{% endblock title %}
+
+{% block content %}
+    
+    <!-- Inicio del Forumlario-->
+    <div class="signupFrm">    
+            <form action="."  method="POST" class="form">
+                <h1 class="title">Editar Entrega</h1>
+                {%  csrf_token %}
+            <div class="container-1">
+                <input type="number" placeholder="id" name="id" value="{{entrega.id}}" required readonly hidden>
+                <div class="fechaContainer">
+                    <input type="date" class="inputform" placeholder="fecha_entrega" name="txt_fecha_entrega" value="{{entrega.fecha_entrega|date:'Y-m-d' }}" required readonly>
+                    <label for="fecha_entrega" class="labelform">F. Entrega</label>
+                </div>                
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="©" name="txt_responsable_Entrega" value="{{entrega.responsable_Entrega}}" required readonly>
+                    <label for="responsable_Entrega" class="labelform">Emisor</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="©" name="txt_nombre_solicitante" value="{{entrega.nombre_solicitante}}" required readonly>
+                    <label for="nombre_solicitante" class="labelform">Adquiriente</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="a" name="txt_serialSenaElemento" value="{{entrega.idC}}" required readonly>
+                    <label for="serialSenaElemento" class="labelform">Serial Elemento </label>
+                </div>
+            </div>
+            <div class="container-1">          
+            </div>
+            <div class="container-1">                                
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="a" name="txt_cantidad_prestada" value="{{entrega.cantidad_prestada}}" required>
+                    <label for="cantidad_prestada" class="labelform">Cantidad Entregada </label>
+                </div>
+
+
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="a" name="txt_observaciones_prestamo" value="{{entrega.observaciones_prestamo}}" required >
+                    <label for="observaciones_prestamo" class="labelform">Observaciones </label>
+                </div>
+                            
+            </div>
+            <div class="container-1">                
+                <div class="container-botones">
+                    <button type="submit" class="submitBtn">GUARDAR</button>
+                    <a href="{% url 'consultarTransacciones' %}"><button type="button" class="submitBtn">CANCELAR</button></a>
+
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}

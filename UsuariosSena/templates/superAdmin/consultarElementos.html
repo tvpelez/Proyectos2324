@@ -1,0 +1,620 @@
+{% extends '../superAdmin/basesuadmin.html' %}
+
+{% load static %}
+
+{% block title %}
+Consultar Elementos
+{% endblock title %}
+
+<!--Script Contenido Estilos de Tailwindcss-->
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/modal.css' %}">
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesregusuario.css' %}">
+
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock extrastyle %}
+
+{% block content %}
+
+
+<!--Contenedor principal de todo el contenido -->
+
+<section class="bg-white  shadow-xl rounded-md p-4 overflow-hidden m-4 section" >
+
+  <h1 class="text-[1.5rem] m-2 mb-10 font-extrabold ">Consultar  Elementos</h1>
+<!--Barra de Busqueda-->
+
+<div class="flex my-8 items-center w-full h-[1rem] max-w-md " x-data="{ search: '' }">
+  <div class="w-full ">
+    <input type="search" class="w-full px-4 py-1 text-gray-800 rounded rounded-lg focus:outline-orange-500" id="filtroEdad"
+      placeholder="Filtrar por: Prestamo... Apellido... correo... " onkeyup="filtrarTabla()" x-model="search">
+  </div>
+  <div>
+    <button type="submit" class="flex items-center bg-orange-500 justify-center w-12 h-12 text-white rounded-r-lg"
+      :class="(search.length > 0) ? 'bg-purple-500' : 'bg-gray-500 cursor-not-allowed'"
+      :disabled="search.length == 0">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="imgretorno">
+    <a href="/usuariodash/" >
+      <img src="{% static 'img/flecha-atras.png' %}" alt="" >
+  </a>
+  </div>
+</div>
+
+  
+  <form method="GET" action="{% url 'consultarElementos' %}">
+    <div class="flex flex-col md:flex-row items-center">
+      <label class="text-sm font-medium underline underline-offset-8 text-gray-900 mb-2 md:mb-0 md:mr-4 order-1 md:order-none">Selecciona una Categoria de Elementos para Listar:</label>
+      <select id="opcion" name="opcion" value="Elementos " class="mb-2 md:mb-0 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-2/12 p-2.5 order-3 md:order-none">
+          <optgroup label="Elementos">
+              <option value="elementosconsu">Elementos Consumibles</option>
+              <option value="elementosdevo">Elementos Devolutivos</option>
+      </select>
+      <button class="bg-orange-500 hover:bg-orange-700 text-white font-bold ml-4 py-2 px-4 rounded order-2 md:order-none" type="submit">Enviar</button>
+  </div>
+  
+  </form>
+{% if opcion_seleccionada == 'elementosconsu' %} 
+  <div class="flex m-auto flex-col max-w-full overflow-x-auto mt-8">
+    <div class="py-2 -my-2  sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div class="inline-block w-max scroll-auto overflow-hidden align-middle sm:rounded-lg">
+
+
+        <!--Datatable se crea tabla con scrool maximo del contenedor disponible, con 12 enunciados en la cabecera-->
+        <table class="table-auto  overflow-scroll-hidden w-full" id="tablaPersonas">
+          <thead>
+            <tr>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Fecha</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Nombre</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Categoría</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Estado</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Cantidad</th>
+              <th
+                class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Vlr Unid</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Vlr Total</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Descripción</th>
+              <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Observación</th>
+              <th class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Factura</th>
+              <th class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            {% for elemento in ElementosConsumibles %}
+            <tr>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.fechaAdquisicion }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.productoConsumible.nombreElemento }}
+                                                                    
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                {% if elemento.productoConsumible.categoriaElemento == 'C' or elemento.productoConsumible.categoriaElemento == 'Consumible'  %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.6rem] font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                  Consumible</span>
+                {% elif elemento.productoConsumible.categoriaElemento == 'D' or elemento.productoConsumible.categoriaElemento == 'Devolutivo' %}
+                <span
+                  class="text-center inline-flex px-2 text-[0.6rem] font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                  Devolutivo</span>
+                {% endif %}
+              </td>
+              <td class=" px-3 py-2 whitespace-no-wrap  border-b border-gray-200">
+                {% if elemento.productoConsumible.estadoElemento == 'D' or elemento.productoConsumible.estadoElemento == 'Disponible' %}
+                <span
+                  class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-green-800 bg-green-100 rounded-full">Disponible</span>
+                {% elif elemento.productoConsumible.estadoElemento == 'G' or elemento.productoConsumible.estadoElemento == 'Garantia' %}
+                <span
+                  class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-yellow-800 bg-yellow-100 rounded-full">Garantia</span>
+                {% elif elemento.productoConsumible.estadoElemento == 'B' or elemento.productoConsumible.estadoElemento == 'Baja' %}
+                <span
+                  class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-orange-800 bg-orange-100 rounded-full">Baja</span>
+                {% elif elemento.productoConsumible.estadoElemento == 'P' or elemento.productoConsumible.estadoElemento == 'Prestamo' %}
+                <span
+                  class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-orange-800 bg-orange-100 rounded-full">Entregado</span>
+                {% endif %}
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.cantidadElemento }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">${{ elemento.productoConsumible.costoUnidadElemento }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">${{ elemento.costoTotalElemento }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.productoConsumible.descripcionElemento }}
+                </div>
+              </td>
+              <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.observacionElemento }}
+                </div>
+              </td>
+              <td
+                class=" text-ellipsis w-3/2 overflow-hidden ... px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+                
+                {% if elemento.facturaElemento %}
+                <div class="text-[0.3rem] leading-5 text-gray-500"><a href="{{ elemento.factura.url }}" target="_blank"><img class="w-min scale(.75)" src="{{ elemento.factura.url }}" alt="Factura"></a>
+                </div>
+                {% else %}
+                <div class="text-[0.7rem] leading-5 text-gray-500"><a href="#" >NoFactura</a>
+                </div>  
+                {% endif %}
+
+              </td>
+              <!--Botones de Visualizar Editar y ELiminar-->
+              <td
+                class="flex  px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-l border-gray-200 gap-2">
+                <button title="Visualizar Elemento" onclick="openModal('{{ elemento.fechaAdquisicion }}, {{ elemento.productoConsumible.nombreElemento }}, {% if elemento.productoConsumible.categoriaElemento == 'C' %} Consumible {% endif %} , {% if elemento.productoConsumible.estadoElemento == 'D' %} Disponible {% elif elemento.productoConsumible.estadoElemento == 'P' %} Prestamo {% elif elemento.productoConsumible.estadoElemento == 'G' %} Garantia {% elif elemento.productoConsumible.estadoElemento == 'B' %} Baja {% endif %},  {{ elemento.productoConsumible.descripcionElemento }}, {{ elemento.observacionElemento }}, {{elemento.cantidadElemento }}, {{ elemento.productoConsumible.costoUnidadElemento }} ')",>
+                  <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" />
+                    <path
+                      d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                    <path
+                      d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                      fill="#42ade2" />
+                    <path
+                      d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                      fill="#231f20" />
+                  </svg>
+                </button>
+
+                {% if request.user.cuentadante == 'superAdmin' or request.user.cuentadante == 'adminD'  %}
+
+                <button onclick="">
+                  <a href="/editarElementoconsu/{{elemento.productoConsumible.id}}">
+                    <svg xmlns="http://www.w3.org/2000/svg" href="/DonProyecto/editarElementoconsu.html"
+                      class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </a>
+                </button>
+                  <button title="Inhabilitar Elemento" onclick="botoninhabilitar('{{elemento.productoConsumible.id}}')">
+  
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  
+                </button>
+                </form>
+                
+                {% endif %}
+                
+              </td>
+            </tr>
+            {% endfor %} 
+        </table>
+
+
+            <div id="userModal" class="modal">
+              <div class="modal-content">
+                <thead>
+                  <span class="close" onclick="closeModal()">&times;</span>
+                </thead>
+                <div id="userData">
+                  <table>
+                    <tr>
+                      <th>Fecha de Ingreso:</th>
+                      <td><input type="text" id="fechaElementoField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Nombre:</th>
+                      <td><input type="text" id="nombreField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Categoria:</th>
+                      <td><input type="text" id="categoriaField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Estado:</th>
+                      <td><input type="text" id="estadoField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Descripcion:</th>
+                      <td><input type="text" id="descripcionElementoField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Observaciones:</th>
+                      <td><input type="text" id="observacionElementoField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>Cantidad:</th>
+                      <td><input type="text" id="cantidadField" readonly></td>
+                    </tr>
+                    <tr>
+                      <th>valor unitario:</th>
+                      <td><input type="text" id="valorUnidadElementoField" readonly></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="flex w-20 gap-4 justify-end">
+              <a href="{% url 'generar_pdf_consumibles' %}" class="btn btn-primary"><img src="{% static 'img/pdf.png' %}" alt=""></a>
+              <a href="{% url 'generar_excel' %}?opcion={{ opcion_seleccionada }}" class="btn btn-primary"><img src="{% static 'img/excel.png' %}" alt="Excel"></a>
+              </div>    
+                     
+{% elif opcion_seleccionada == 'elementosdevo' %}x
+<!--Datatable se crea tabla con scrool maximo del contenedor disponible, con 12 enunciados en la cabecera-->
+      <table class="table-auto  overflow-scroll-hidden w-max" id="tablaPersonas"> 
+        <thead>
+          <tr>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Fecha</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Nombre</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Categoría</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Estado</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Vlr Unid</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Descripción</th>
+            <th class="px-2 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Observación</th>
+            <th class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+                Serial</th>
+            <th class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+              Factura</th>            
+            <th class="px-6 py-1 text-xs font-semibold leading-4 tracking-wider text-center text-black-500 uppercase border-b border-gray-200 bg-orange-50">
+            Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">
+          {% for elemento in ElementosDevolutivos %}
+          <tr>
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.fecha_Registro }}
+              </div>
+            </td>
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.producto.nombre }}
+              </div>
+            </td>
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              {% if elemento.producto.categoria == 'C' or elemento.producto.categoria == 'Consumible'  %}
+              <span
+                class="text-center inline-flex px-2 text-[0.6rem] font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                Consumible</span>
+              {% elif elemento.producto.categoria == 'D' or  elemento.producto.categoria == 'Devolutivo' %}
+              <span
+                class="text-center inline-flex px-2 text-[0.6rem] font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                Devolutivo</span>
+              {% endif %}
+            </td>
+            <td class=" px-3 py-2 whitespace-no-wrap  border-b border-gray-200">
+              {% if elemento.producto.estado == 'D' or  elemento.producto.estado == 'Disponible' %}
+              <span
+                class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-green-800 bg-green-100 rounded-full">Disponible</span>
+              {% elif elemento.producto.estado == 'G' or  elemento.producto.estado == 'Garantia' %}
+              <span
+                class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-yellow-800 bg-yellow-100 rounded-full">Garantia</span>
+              {% elif elemento.producto.estado == 'B' or  elemento.producto.estado == 'Baja' %}
+              <span
+                class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-orange-800 bg-orange-100 rounded-full">Baja</span>
+              {% elif elemento.producto.estado == 'P' or  elemento.producto.estado == 'Prestamo' %}
+              <span
+                class="inline-flex px-2 text-[0.6rem] font-medium leading-5 text-orange-800 bg-orange-100 rounded-full">Prestamo</span>
+              {% endif %}
+            </td>
+
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">${{ elemento.producto.valor_unidad }}
+              </div>
+            </td>            
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.producto.descripcion }}
+              </div>
+            </td>
+            <td class=" truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.observacion }}
+              </div>
+            </td>
+      
+            <td class="truncate px-3 py-2 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-[0.7rem] leading-5 text-gray-500">{{ elemento.serial }}</div>
+            </td>
+            <td>
+            {% if elemento.factura %}
+                <div class="text-[0.3rem] leading-5 text-gray-500"><a href="{{ elemento.factura.url }}" target="_blank"><img class="w-min scale(.75)" src="{{ elemento.factura.url }}" alt="Factura"></a>
+                </div>
+                {% else %}
+                <div class="text-[0.7rem]
+                leading-5 text-gray-500" ><a href="#" >NoFactura</a>
+                </div>  
+            
+            </td>
+            {% endif %}
+            <td
+              class="flex  px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-l border-gray-200 gap-2">
+              <button title="Visualizar Elemento" onclick="openModal('{{ elemento.fecha_Registro }}, {{ elemento.producto.nombre }}, {% if elemento.producto.categoria == 'D' %} Devolutivo {% endif %} , {% if elemento.producto.estado == 'D' %} Disponible {% elif elemento.producto.estado == 'P' %} Prestamo {% elif elemento.producto.estado == 'G' %} Garantia {% elif elemento.producto.estado == 'B' %} Baja {% endif %} ,  {{ elemento.producto.valor_unidad }}, {{ elemento.serial }}, {{ elemento.producto.descripcion }}, {{ elemento.observacion }}  ')">
+                <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" /> if
+                  <path
+                    d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                  <path
+                    d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                    fill="#42ade2" />
+                  <path
+                    d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                    fill="#231f20" />
+                </svg>
+              </button>
+
+
+              {% if request.user.cuentadante == 'superAdmin' or request.user.cuentadante == 'adminD'  %}
+              <button title="Editar Elemento" onclick="">
+                <a href="/editarElementodevo/{{elemento.serial}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" href="/DonProyecto/editarElemento.html"
+                    class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </a>
+              </button>
+              <button title="Inhabilitar Elemento" onclick="botonEliminar('{{elemento.serial}}')">
+  
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                
+              </button>
+              {% endif %}              
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        
+        <div id="userModal" class="modal">
+          <div class="modal-content">
+            <thead>
+              <span class="close" onclick="closeModal()">&times;</span>
+            </thead>
+            <div id="userData">
+              <table>
+                <tr>
+                  <th>Fecha de Ingreso:</th>
+                  <td><input type="text" id="fechaElementoField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Nombre:</th>
+                  <td><input type="text" id="nombreField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Categoria:</th>
+                  <td><input type="text" id="categoriaField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Estado:</th>
+                  <td><input type="text" id="estadoField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Descripcion:</th>
+                  <td><input type="text" id="descripcionElementoField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Observaciones:</th>
+                  <td><input type="text" id="observacionElementoField" readonly></td>
+                </tr>
+                <tr>
+                  <th>Serial:</th>
+                  <td><input type="text" id="serialField" readonly></td>
+                </tr>
+                <tr>
+                  <th>valor unitario:</th>
+                  <td><input type="text" id="valorUnidadElementoField" readonly></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+      </div>
+      <div class="flex w-20 gap-4 justify-end">
+        <a href="{% url 'generar_pdf_devolutivos' %}" class="btn btn-primary"><img src="{% static 'img/pdf.png' %}" alt=""></a>
+        <a href="{% url 'generar_excel' %}?opcion={{ opcion_seleccionada }}" class="btn btn-primary"><img src="{% static 'img/excel.png' %}" alt="Excel"></a>
+        </div>
+    </div>
+  </div>
+{% endif %} 
+
+ 
+  
+        <!-- Botones para generar PDF y Excel -->
+        
+        
+        
+    
+
+
+    <!-- Modal para mostrar la información del usuario -->
+
+
+
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <thead>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </thead>
+    <div id="userData">
+      <table>
+        <tr>
+          <th>Fecha de Ingreso:</th>
+          <td><input type="text" id="fechaElementoField" readonly></td>
+        </tr>
+        <tr>
+          <th>Nombre:</th>
+          <td><input type="text" id="nombreField" readonly></td>
+        </tr>
+        <tr>
+          <th>Categoria:</th>
+          <td><input type="text" id="categoriaField" readonly></td>
+        </tr>
+        <tr>
+          <th>Estado:</th>
+          <td><input type="text" id="estadoField" readonly></td>
+        </tr>
+        <tr>
+          <th>Descripcion:</th>
+          <td><input type="text" id="descripcionElementoField" readonly></td>
+        </tr>
+        <tr>
+          <th>Observaciones:</th>
+          <td><input type="text" id="observacionElementoField" readonly></td>
+        </tr>
+        <tr>
+          <th>Serial:</th>
+          <td><input type="text" id="serialField" readonly></td>
+        </tr>
+        <tr>
+          <th>valor unitario:</th>
+          <td><input type="text" id="valorUnidadElementoField" readonly></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+{% endblock %}
+{% block extrajs %}
+<script>
+  const botonEliminar = (serial) => {
+    Swal.fire({
+      "title": "¿Estás seguro de inhabilitar el elemento?",
+      "text": "El elemento sera dado de baja",
+      "icon": "question",
+      "showCancelButton": true,
+      "cancelButtonText": "Cancelar",
+      "confirmButtonText": "Inhabilitar",
+      "reverseButtons": true,
+      "confirmButtonColor": "#fc7323",
+      "iconColor": "#fc7323",
+    })
+      .then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "/inhabilitar_elemento_devo/" + serial;
+        }
+      })
+  }
+</script>
+<script>
+  const botoninhabilitar = (id) => {
+    Swal.fire({
+      "title": "¿Estás seguro de inhabilitar el elemento?",
+      "text": "El elemento sera dado de baja",
+      "icon": "question",
+      "showCancelButton": true,
+      "cancelButtonText": "Cancelar",
+      "confirmButtonText": "Inhabilitar",
+      "reverseButtons": true,
+      "confirmButtonColor": "#fc7323",
+      "iconColor": "#fc7323",
+    })
+      .then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "/hinhabilitar_elemento_consumible/" + id;
+        }
+      })
+  }
+</script>
+<script src="{% static 'js/scriptConsultarUsuario.js' %}"></script>
+
+<script>
+  // Función para abrir el modal y mostrar la información del usuario
+  function openModal(userData) {
+    const modal = document.getElementById('userModal');
+
+    const userDataArray = userData.split(', ');
+
+    
+    {% if opcion_seleccionada == 'elementosconsu' %}
+         
+
+    const fechaElementoField = document.getElementById('fechaElementoField');
+    const nombreField = document.getElementById('nombreField');
+    const categoriaField = document.getElementById('categoriaField');
+    const estadoField = document.getElementById('estadoField');
+    const descripcionElementoField = document.getElementById('descripcionElementoField');
+    const observacionElementoField = document.getElementById('observacionElementoField');
+    const cantidadField = document.getElementById('cantidadField');
+    const valorUnidadElementoField = document.getElementById('valorUnidadElementoField');
+
+    fechaElementoField.value = userDataArray[0];
+    nombreField.value = userDataArray[1];
+    categoriaField.value = userDataArray[2];
+    estadoField.value = userDataArray[3];
+    descripcionElementoField.value = userDataArray[4];
+    observacionElementoField.value = userDataArray[5];
+    cantidadField.value = userDataArray[6];
+    valorUnidadElementoField.value = userDataArray[7];
+    modal.style.display = 'block';
+  }
+    
+    
+    {% elif opcion_seleccionada == 'elementosdevo' %}
+
+    const fechaElementoField = document.getElementById('fechaElementoField');
+    const nombreField = document.getElementById('nombreField');
+    const categoriaField = document.getElementById('categoriaField');
+    const estadoField = document.getElementById('estadoField');
+    const descripcionElementoField = document.getElementById('descripcionElementoField');
+    const observacionElementoField = document.getElementById('observacionElementoField');
+    const serialField = document.getElementById('serialField');
+    const valorUnidadElementoField = document.getElementById('valorUnidadElementoField');
+
+    fechaElementoField.value = userDataArray[0] +" del "+ userDataArray[1];;
+    nombreField.value = userDataArray[2];
+    categoriaField.value = userDataArray[3];
+    estadoField.value = userDataArray[4];
+    descripcionElementoField.value = userDataArray[7];
+    observacionElementoField.value = userDataArray[8];
+    serialField.value = userDataArray[6];
+    valorUnidadElementoField.value = userDataArray[5];
+    modal.style.display = 'block';
+  }
+
+    {% endif %}
+
+  // Función para cerrar el modal
+  function closeModal() {
+    const modal = document.getElementById('userModal');
+    modal.style.display = 'none';
+  }
+
+  // Cierra el modal si se hace clic fuera de él
+  window.onclick = function (event) {
+    const modal = document.getElementById('userModal');
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+
+
+{% endblock extrajs %}

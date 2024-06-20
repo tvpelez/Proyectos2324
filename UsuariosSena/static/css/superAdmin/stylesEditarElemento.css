@@ -1,0 +1,354 @@
+
+/*Estilos del Formulario Registro Usuarios*/
+/* Sitúa el formulario en el centro tanto horizontal como verticalmente. Establece su altura al 100% de la altura de la ventana */
+
+.signupFrm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+  
+}
+
+.form {
+background-color: white;
+width: 100%;
+height: auto;
+border-radius: 8px;
+box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+padding: 4rem;
+}
+
+.title {
+font-size: 3rem;
+font-weight: 900;
+margin-bottom: 2rem;
+margin-top: 3rem;
+text-align: center;
+}
+
+.container-1{
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+}
+
+.inputContainer {
+position: relative;
+height: 3rem;
+width: 17rem;
+margin-bottom: 17px;
+}
+
+.fechaContainer {
+position: relative;
+height: 3rem;
+width: 10rem;
+margin-bottom: 17px;
+}
+/* Estilo input formularios */
+
+.inputform {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 1rem;
+  padding: 0 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+}
+
+/* Ocultar texto de palceholder (a) */
+
+::placeholder {
+  color: transparent;
+}
+
+
+/* Estilos label formularios */
+
+.labelform {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 0 4px;
+  background-color: white;
+  color: #58595b;
+  font-size: 1rem;
+  transition: 0.5s;
+  z-index: 0;
+}
+
+.inputformvalor {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 0.6rem;
+  padding: 0 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+}
+.inputContainervalor {
+  position: relative;
+  height: 3rem;
+  width: 8rem;
+  margin-bottom: 17px;
+  }
+
+.labelformvalor {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 0 4px;
+  background-color: white;
+  color: #4f47489e;
+  font-size: 0.8rem;
+  transition: 0.5s;
+  z-index: 0;
+}
+
+
+
+/*Estilos BOtones */
+
+.container-botones{
+  display: flex;
+  justify-content: center;
+}
+
+.submitBtn {
+  display: flex;
+  margin: 0 10px;
+  padding: 15px 30px;
+  border: none;
+  background-color: #238276;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 30px;
+}
+
+.submitBtn:hover {
+  background-color: #1689ef;
+  transform: translateY(-2px);
+}
+
+.inputform:focus + .labelform {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+}
+
+.inputformvalor:focus{
+  border: 3px solid #369dfd;
+}
+
+.inputformvalor:not(:placeholder-shown) + .labelformvalor{
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.inputformvalor:focus + .labelformvalor {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+}
+
+.inputform:focus{
+  border: 3px solid #369dfd;
+}
+
+.inputform:not(:placeholder-shown) + .labelform{
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+
+.labelformselect{
+position: absolute;
+top: -7px;
+left: 3px;
+z-index: 10;
+font-size: 0.8rem;
+font-weight: 600;
+color: rgb(0, 0, 0);
+
+}
+
+.selector{
+position: absolute;
+top: 0px;
+left: 0px;
+height: 50%;
+width: 100%;
+border: 1px solid #DADCE0;
+border-radius: 7px;
+font-size: 0.8rem;
+padding: 0 10%;
+outline: none;
+z-index: 1;
+margin-top: 0.7rem;
+}
+
+.selectContainer{
+position: relative;
+height: 4rem;
+width: 8%;
+margin-bottom: 1rem;
+}
+
+.labelcantidad{
+  position: absolute;
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  
+  }
+
+.inputcantidad {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 70%;
+  width: 100%;
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  padding: 0 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+}
+  
+
+.selectorimagen{
+  width: 15%;
+  display:flexbox;
+  
+}
+
+.selectorimagen label{
+font-size: 80%;
+font-weight: 600;
+color: rgb(0, 0, 0);
+
+}
+
+.tomarfoto{
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 0.7em;
+  width: 100%;
+}
+
+.inputsubirfoto{
+  border: 1px solid #DADCE0;
+  border-radius: 7px;
+  font-size: 0.7em;
+  width: 80%;
+}
+
+
+
+
+/* Para 1300px */  
+@media (max-width: 1270px) {
+  .section{
+      width: 98%;      
+  }
+  .inputform:focus + .labelform {
+    font-size: 1rem;
+    
+    
+  }
+}
+
+/* Para 1000px */  
+@media (max-width: 1000px) {
+  .section{
+    font-size: 0.6rem;
+    
+}
+  .title{
+      font-size: 2rem;
+      
+  }
+  .container-1{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 1rem;
+  }
+
+  .inputContainer {
+      
+      height: 2rem;
+      width: 80%;
+      margin-bottom: 17px;
+      }
+  .selectContainer{
+  
+      height: 2rem;
+      width: 60%;
+      margin-bottom: 1rem;
+      
+      }
+  
+  .labelform{
+      font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+      .title{
+          font-size: 1rem;
+      }
+      .container-1{
+        display:grid;
+        grid-template-columns: 1fr;
+        margin: 2rem;
+        justify-self: center;
+    }
+      .signupFrm{
+          font-size: 0.4rem;
+      }
+
+      .labelform{
+        font-size: 0.4rem;
+      }
+
+      .inputform:focus + .labelform{
+        font-size: 0.4rem;
+      }
+
+      .inputsubirfoto + .labelsubirfoto{
+        width: 100%;
+      }
+      
+
+}

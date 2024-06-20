@@ -1,0 +1,103 @@
+Task -- FrontEnd
+
+
+- Mnesajes Modal ---- Darwineta
+
+Calendario  ---- Karim Cala
+
+Dashboard  --- Miguelo
+
+consultar elementos esta saliendo la inicial en categoria y en estado y no el nombre compelto ---- Backend
+
+tamaño fuente forularios y intensidad input ----- AA
+
+tamaño boton cargar imagen en resposnive se ve muy poco -- AA
+
+aside salir se le monta  --- MIGO
+
+footer --- AA
+
+link de la base --- 
+
+Botones de visualizar y eliminar qeu afecte base de datos y editar -- AA
+
+template de editar Prestamo - Usuarios - Elemntos --- 
+
+template Visualizar (individual) Prestamo - Elemento - usuario 
+
+boton de buscar elemento en plantilla crear prestamo
+
+logica nombre elemento en plantilla crear prestamo
+
+Error en los choices de estado elemento 
+
+preguntar por prestamos es un estado...... 
+
+consumibles tambine salen como prestamo sin fecha de regreso 
+
+
+
+    
+                    <td
+                class="flex  px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200 gap-2">
+                <button
+                  onclick="openModal('{{Prestamos.nombres}}, {{Prestamos.apellidos}}, {{Prestamos.tipoIdentificacion}},  {{Prestamos.rol}}, {{Prestamos.numeroIdentificacion }}, {{ Prestamos.email }}  ')"
+                  ,>
+                  <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" />
+                    <path d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                    <path d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                      fill="#42ade2" />
+                    <path d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                      fill="#231f20" />
+                  </svg>
+                </button>              
+              <button onclick="">
+                <a href="/editarPrestamo/{{Prestamos.id}}">
+                <svg xmlns="http://www.w3.org/2000/svg" href="/DonProyecto/editarPrestamo.html"
+                  class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </a>
+            </button>
+            </td>
+          </tr>
+
+
+
+
+           <td
+                class="flex  px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200 gap-2">
+                <button
+                  onclick="openModal('{{Prestamos.nombres}}, {{Prestamos.apellidos}}, {{Prestamos.tipoIdentificacion}},  {{Prestamos.rol}}, {{Prestamos.numeroIdentificacion }}, {{ Prestamos.email }}  ')"
+                  ,>
+                  <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" />
+                    <path d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                    <path d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                      fill="#42ade2" />
+                    <path d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                      fill="#231f20" />
+                  </svg>
+                </button>
+                  <button onclick="">
+                      <a href="/editarPrestamo/{{Prestamos.id}}">
+                      <svg xmlns="http://www.w3.org/2000/svg" href="/DonProyecto/editarPrestamo.html"
+                        class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </a>
+                  </button>
+                  <form method="post" action="{% url 'finalizarPrestamo_view' id=Prestamos.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="txt_nuevo_estado" value="Finalizado">
+                    <button type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                  </button>
+                  </form>
+                </td>
+              </tr>

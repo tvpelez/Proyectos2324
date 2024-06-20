@@ -1,0 +1,79 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+                        
+{% load static %}
+
+ 
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/styleEditarPrestamo1.css' %}">    
+{% endblock extrastyle %}
+    
+
+{% block title %}
+    Formulario Editar Prestamos
+{% endblock title %}
+    
+{% block content %}
+
+    <!-- Inicio del Forumlario-->
+    <div class="signupFrm">
+        
+            <form action="."  method="POST" class="form">
+                {%  csrf_token %}
+                <h1 class="title">Editar Prestamo</h1>
+            <div class="container-1">
+                <input type="number" placeholder="id" name="id" value="{{prestamo.id}}" required readonly hidden>
+                <div class="fechaContainer">
+                    <input type="date" class="inputform" placeholder="fechaEntrega" name="txt_fechaentrega" value="{{prestamo.fechaEntrega|date:'Y-m-d' }}" required readonly>
+                    <label for="fechaEntrega" class="labelform">F. Entrega</label>
+                </div>
+                <div class="fechaContainer">
+                    <input type="date" class="inputform" placeholder="fechaEntrega" name="txt_fechaDevolucion" value="{{prestamo.fechaDevolucion|date:'Y-m-d'}}" required >
+                    <label for="fechaDevolucion" class="labelform">F. Devolución</label>
+                </div>                
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="©" name="txt_nombreEntrega" value="{{prestamo.nombreEntrega}}" required readonly>
+                    <label for="nombreEntrega" class="labelform">Emisor</label>
+            
+                </div>
+            </div>
+            <div class="container-1">
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="©" name="txt_nombreRecibe" value="{{prestamo.nombreRecibe}}" required readonly>
+                    <label for="nombreRecibe" class="labelform">Adquiriente</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="©" name="txt_nombreElemento" value="{{prestamo.serialSenaElemento}}" required readonly>
+                    <label for="nombreElemento" class="labelform">Elemento</label>
+                </div>                
+            </div>
+
+            <div class="container-1">                                
+                
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="a" name="txt_valorUnidadElemento" value="{{prestamo.valorUnidadElemento}}" required readonly>
+                    <label for="valorUnidadElemento" class="labelform">Valor Unitario </label>
+                </div>
+            
+                <div class="inputContainer">
+                    <select class="inputform" name="txt_estado_prestamo" required readonly>
+                        <option value="ACTIVO" {% if prestamo.estadoPrestamo == 'ACTIVO' %}selected{% endif %}>ACTIVO</option>
+                        <option value="VENCIDO" {% if prestamo.estadoPrestamo == 'VENCIDO' %}selected{% endif %}>VENCIDO</option>
+                        <option value="FINALIZADO" {% if prestamo.estadoPrestamo == 'FINALIZADO' %}selected{% endif %}>FINALIZADO</option>
+
+                    </select>
+                    <label for="estado_prestamo" class="labelform">Estado</label>
+                </div>
+                
+                <div class="inputContainer">
+                    <input type="text" class="inputform" placeholder="a" name="txt_observacionesPrestamo" value="{{prestamo.observacionesPrestamo}}" required>
+                    <label for="observacionesPrestamo" class="labelform">Observaciones</label>
+                </div>                              
+            </div>
+            <div class="container-botones">
+                <button type="submit" class="submitBtn">GUARDAR</button>
+                <a href="{% url 'transacciondash' %}"><button type="button" class="submitBtn">CANCELAR</button></a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

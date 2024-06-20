@@ -1,0 +1,145 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+
+{% load static %}
+
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesregusuario.css' %}">
+{% endblock extrastyle %}
+
+
+{% block title %} Formulario Registro Usuarios {% endblock title %}
+
+
+{% block content %}
+
+<section class="section" style=" margin: 10px; padding: 10px">
+
+    <!-- Inicio del Forumlario-->
+
+    <div class="signupFrm">
+        <form action="/regUsuario/" class="form" method="post" enctype="multipart/form-data">
+            <h1 class="title">Registro de Usuarios</h1>
+
+            {% csrf_token %}
+
+            <div class="container-1">
+                <div class="inputContainer">
+                    <input type="text" class="inputform" pattern="^\S.*$" placeholder="a" name="nombres" id="nombres" required>
+                    <label for="nombres" class="labelform">Nombres</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" pattern="^\S.*$" name="apellidos" placeholder="a" id="apellidoo" required>
+                    <label for="apellidos" class="labelform" name="apellidos">Apellidos</label>
+                </div>
+                <div class="selectContainer">
+                    <label for="tipoIdentificacion" class="labelformselect">Tipo Documento</label>
+                    <div>
+                        <select class="selector" name="tipoIdentificacion" id="tipoIdentificacion">
+                            <option value="CC">CC</option>
+                            <option value="PEP">Pasaporte</option>
+                            <option value="TI">TI</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" pattern="^\S.*$" name="numeroIdentificacion" placeholder="a"
+                        id="numeroIdentificacion" required>
+                    <label for="numeroIdentificacion" class="labelform" name="numeroIdentificacion">Numero Id</label>
+                </div>
+            </div>
+            <div class="container-1">
+                <div class="inputContainer">
+                    <input type="email" class="inputform" pattern="^\S.*$" placeholder="a" name="email" id="email" required>
+                    <label for="email" class="labelform">Correo Sena</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" class="inputform" pattern="^\S.*$" placeholder="a" name="celular" id="celular" required>
+                    <label for="celular" class="labelform">Celular</label>
+                </div>
+                <div class="selectContainer">
+                    <label for="rol" class="labelformselect">Rol</label>
+                    <div>
+                        <select class="selector" name="rol" id="rol">
+                            <option value="I">Instructor</option>
+                            <option value="M">Monitor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="selectContainer">
+                    <label for="cuentadante" class="labelformselect">Tipo Cuentadante</label>
+                    <div>
+                        <select class="selector" name="cuentadante" id="cuentadante">
+                            <option value="adminD">adminDirecto</option>
+                            <option value="adminS">adminSolidario</option>
+                            <option value="monitor">monitor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="selectContainer">
+                    <label for="tipoContrato" class="labelformselect">Tipo Contrato</label>
+                    <div>
+                        <select class="selector" name="tipoContrato" id="tipoContrato">
+                            <option value="P">Planta</option>
+                            <option value="C">Contratista</option>
+                            <option value="A">Aprendiz</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="selectContainer">
+                    <label for="is_active" class="labelformselect" name="is_active">Estado Usuario</label>
+                    <div>
+                        <select class="selector" name="is_active" id="is_active">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="container-1">
+                <div class="inputContainer">
+                    <input type="text" class="inputform" pattern="^\S.*$" name="duracionContrato" id="duracionContrato">
+                    <label for="duracionContrato" class="labelform">Duracion Contrato</label>
+
+                </div>
+                <div class="inputContainer">
+                    <input type="password" class="inputform" pattern="^\S.*$" placeholder="a" name="password" required>
+                    <label for="password" class="labelform">Contraseña</label>
+                </div>
+                <div class="inputContainer">
+                    <input type="password" class="inputform" pattern="^\S.*$" placeholder="a" name="password" required>
+                    <label for="password" class="labelform">Confirmar Contraseña</label>
+                </div>
+
+                <div class="selectorimagen">
+                    <label for="fotoUsuario" class="">Adjuntar Foto</label>
+                    <input type="file" name="fotoUsuario" class="inputsubirfoto">
+                </div>
+            </div>
+            <div class="container-1">
+
+
+            </div>
+            <div class="container-botones">
+
+                <button type="submit" class="submitBtn"><span id="span">GUARDAR</span></button>
+                <button type="button" class="submitBtn" id="cancelBtn"><span>CANCELAR</span></button>
+
+            </div>
+            <!--script boton cancelar redirige dashboard -->
+            <script>
+                document.getElementById("cancelBtn").onclick = function() {
+                  window.location.href = "/usuariodash/";
+                };
+              </script>
+        </form>
+
+    </div>
+</section>
+{% endblock %}

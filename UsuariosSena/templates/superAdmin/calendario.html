@@ -1,0 +1,62 @@
+{% extends '../superAdmin/basesuadmin.html' %}
+
+{% load static %}
+
+
+
+{% block extrastyle %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
+{% endblock extrastyle %}
+    
+    
+
+{% block title %}
+    Calendario
+{% endblock title %}
+    
+
+{% block content %}
+<body>
+    <!-- HERE GOES FULLCALENDAR!!! -->
+    <div id="calendar" class="container" style="padding: 20px"></div><!--width: 100vh-->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    
+    {% block extrascript %}
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+    <script src="{% static 'js/main.min.js'%}"></script>
+    <script src="{% static 'js/sweetalert2.all.min.js'%}"></script>    
+    {% endblock extrascript %}
+    
+    
+    {% block extrajs %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left: 'prev next today',
+                    center: 'title',
+                    right: 'dayGridMonth timeGridWeek listWeek'
+                },
+                events: [
+                    {% for evento in eventos %}
+                        {
+                    title: '{{ evento.title }}',
+                    start: '{{ evento.start }}',
+                    end: '{{ evento.end }}',
+                },
+                {% endfor %}
+            ]
+        });
+        calendar.render();
+    });
+    </script>
+    <script src="{% static 'js/es.js'%}"></script>
+    {% endblock extrajs %}
+        
+</body>
+{% endblock content %}

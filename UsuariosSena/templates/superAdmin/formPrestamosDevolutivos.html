@@ -1,0 +1,169 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/crearPrestamo.css' %}">
+{% endblock extrastyle %}
+
+
+
+
+{% block title %}
+Prestamos
+{% endblock title %}
+
+{% block content %}
+
+
+<!-- Inicio del Forumlario-->
+
+<div class="signupFrm">
+    <form action="/formPrestamosDevolutivos/" class="form" method="post">
+        <h1 class="title">Crear Prestamo</h1>
+
+        {% csrf_token %}
+
+        <div class="container-1">
+
+            <div class="fechaContainer">
+                <input type="date" class="inputform" pattern="^\S.*$" placeholder="fechaDevolucion" name="fechaDevolucion" value="{{ form_data.fechaDevolucion|default:'' }}" required>
+                <label for="fechaDevolucion" class="labelform">Fecha Devolución</label>
+            </div>
+
+
+            <div class="inputContainer">
+                <input list="usuariosList" pattern="^\S.*$" id="nombreEntregaInput" type="text" class="inputform" placeholder="nombreEntrega" name="nombreEntrega" value="{{ form_data.nombreEntrega|default:'' }}" autocomplete="off" required>
+                <label for="" class="labelform">Responsable de la Entrega</label>
+                <datalist id="usuariosList">
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.nombres }} {{ usuario.apellidos }}">{{ usuario.numeroIdentificacion }}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="inputContainer">
+                <input list="usuariosListRecibe" pattern="^\S.*$" id="nombreRecibeInput" type="text" class="inputform input-bold" placeholder="nombreRecibe" name="nombreRecibe" value="{{ form_data.nombreRecibe|default:'' }}" autocomplete="off" required>
+                <label for="" class="labelform">Nombre del Solicitante</label>
+                <datalist id="usuariosListRecibe">
+                    <option value="{{ usuario_pinned.nombres }} {{ usuario_pinned.apellidos }}">
+                        {{ usuario_pinned.numeroIdentificacion }}</option>
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.nombres }} {{ usuario.apellidos }}">
+                        {{ usuario.numeroIdentificacion }}
+                    </option>
+                    {% endfor %}
+                </datalist>
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="inputContainer">
+                <input list="serialesList" type="text" pattern="^\S.*$" class="inputform" placeholder="serialSenaElemento" name="serialSenaElemento" value="{{ form_data.serialSenaElemento|default:'' }}" autocomplete="off" required>
+                <label for="" class="labelform">Serial Elemento</label>
+                <datalist id="serialesList">
+                    {% for nombre, serial, descripcion, prestado in elementos %}
+                    {% if not prestado %}
+                    <option value="{{ serial }}">{{ nombre }}</option>
+                    {% else %}
+                    <option value="{{ serial }}">{{ nombre }} --> AGOTADO</option>
+                    {% endif %}
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="inputContainer">
+                <input list="elementosList" type="text" pattern="^\S.*$" class="inputform" placeholder="nombreElemento" name="nombreElemento" value="{{ form_data.nombreElemento|default:'' }}" autocomplete="off" readonly required>
+                <label for="" class="labelform">Nombre Elemento</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="Disponibles" name="disponibles" value="{{ form_data.disponibles|default:'' }}" id="campoDisponibles" readonly>
+                <label for="cantidadElemento" class="labelform">Disponibles</label>
+            </div>
+
+
+        </div>
+        <div class="container-1">
+            <div class="inputContainervalor">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="a" name="valorUnidadElemento" value="{{ form_data.valorUnidadElemento|default:'' }}" id="valorUnidad" readonly>
+                <label for="valorUnidadElemento" class="labelform">Valor Unidad</label>
+            </div>
+
+            <div class="inputContainer">
+                <input type="text" class="inputform" pattern="^\S.*$" placeholder="a" name="observacionesPrestamo" value="{{ form_data.observacionesPrestamo|default:'' }}" required>
+                <label for="" class="labelform">Observaciones</label>
+            </div>
+            <div class="selectorimagen">
+                <label for="soporte" class="labelsubirfoto">Firma Digital</label>
+                <input type="file" accept="image/*" class="inputsubirfoto">
+
+            </div>
+
+
+        </div>
+        <div class="container-botones">
+            <button type="submit" class="submitBtn" id="submitBtn">GUARDAR</button>
+            <a href="{% url 'transacciondash' %}"> <button type="button" class="submitBtn">CANCELAR</button></a>
+        </div>
+    </form>
+</div>
+</section>
+{% block extrajs %}
+<script src="{% static 'js/validarSeleccionElementoPorSerial.js'%}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{% static 'js/rellenarCampos.js'%}"></script>
+<script src="{% static 'js/calculoTotal.js'%}"></script>
+<script src="{% static 'js/desabilitarBtnGuardar.js'%}"></script>
+<script>
+    var usuarios = [
+        {% for usuario in usuarios %}
+    {
+        nombres: "{{ usuario.nombres }}",
+            apellidos: "{{ usuario.apellidos }}",
+                numeroIdentificacion: "{{ usuario.numeroIdentificacion }}",
+                    rol: "{{ usuario.get_rol_display }}" // Asume que get_rol_display está definido en tu modelo UsuariosSena
+    },
+    {% endfor %}
+    ];
+
+    // Asume que usuario_pineado está definido y tiene las propiedades nombres, apellidos y rol
+    var usuarioPineado = {
+        nombres: "{{ usuario_pinned.nombres }}",
+        apellidos: "{{ usuario_pinned.apellidos }}",
+        rol: "{{ usuario_pinned.get_rol_display }}"
+    };
+
+    function actualizarOpciones() {
+        var opcionesEntrega = '';
+        var opcionesRecibe = '';
+
+        // Usuario "pineado" solo para el datalist de "Instructor Recibe"
+        opcionesRecibe += '<option value="' + usuarioPineado.nombres + ' ' + usuarioPineado.apellidos + '">' + usuarioPineado.numeroIdentificacion + ' - ' + usuarioPineado.rol + '</option>';
+
+        usuarios.forEach(function (usuario) {
+            var nombreCompleto = usuario.nombres + ' ' + usuario.apellidos;
+            var textoOpcion = usuario.numeroIdentificacion + ' - ' + usuario.rol;
+            opcionesEntrega += '<option value="' + nombreCompleto + '">' + textoOpcion + '</option>';
+            opcionesRecibe += '<option value="' + nombreCompleto + '">' + textoOpcion + '</option>';
+        });
+
+        document.getElementById('usuariosList').innerHTML = opcionesEntrega;
+        document.getElementById('usuariosListRecibe').innerHTML = opcionesRecibe;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var entregaInput = document.getElementById('nombreEntregaInput');
+        var recibeInput = document.getElementById('nombreRecibeInput');
+
+        entregaInput.addEventListener('input', function () {
+            actualizarOpciones();
+        });
+
+        recibeInput.addEventListener('input', function () {
+            actualizarOpciones();
+        });
+
+        // Inicializar las opciones al cargar la página
+        actualizarOpciones();
+    });
+</script>
+{% endblock extrajs %}
+{% endblock %}

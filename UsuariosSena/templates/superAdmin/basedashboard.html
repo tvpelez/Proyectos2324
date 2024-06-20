@@ -1,0 +1,268 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/styledashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/notificaciones.css' %}">
+    <link rel="stylesheet" href="{% static 'css/superAdmin/modal.css' %}">
+{% endblock extrastyle %}
+
+{% block title %}
+Home SUAdmin
+{% endblock title %}
+
+
+{% block extrascript %}
+
+<script>
+    // Este script muestra una confirmación SweetAlert cuando se hace clic en el botón
+    document.getElementById('confirmarBtn').addEventListener('click', function() {
+        Swal.fire({
+            "title": "¿Estás seguro de FInalizar el Préstamo?",
+            "text": "El Elemento Devolutivo Retornara al Inventario como Disponible",
+            "icon": "question",
+            "showCancelButton": true,
+            "cancelButtonText": "Cancelar",
+            "confirmButtonText": "Aceptar",
+            "reverseButtons": true,
+            "confirmButtonColor": "#fc7323",
+            "iconColor": "#fc7323",
+          
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario hace clic en "Sí, confirmar", enviar el formulario
+                document.getElementById('miFormulario').submit();
+            }
+        });
+    });
+  </script>
+  <script>
+    // Función para abrir el modal y mostrar la información del usuario
+    function openModal(userData) {
+        const modal = document.getElementById('userModal');
+        const userDataArray = userData.split(',');
+        const adquirienteField = document.getElementById('adquirienteField');
+        const devolucionField = document.getElementById('devolucionField');
+        const serialField = document.getElementById('serialField');
+        const observacionesField = document.getElementById('observacionesField');
+
+        adquirienteField.value = userDataArray[0];
+        devolucionField.value = userDataArray[1];
+        serialField.value = userDataArray[2];
+        observacionesField.value = userDataArray[3];
+        console.log(userDataArray)
+
+        modal.style.display = 'block';
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        const modal = document.getElementById('userModal');
+        modal.style.display = 'none';
+    }
+
+    // Cierra el modal si se hace clic fuera de él
+    window.onclick = function (event) {
+        const modal = document.getElementById('userModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+    
+{% endblock extrascript %}
+    
+
+{% block content %}
+    
+
+    
+
+        <body>
+            
+            <section class="dashboard"> 
+                <h1>Inicio</h1>
+            
+                <div class="caja_dash">
+                  <div class="box_dash click">
+                      <span class="material-icons-sharp" style="color: aliceblue; margin:0  10px;">
+                          account_circle
+                          </span>
+                      <a class="click" href="{% url 'usuariodash' %}">Usuarios</a>
+                  </div>
+                  <div class="box_dash">
+                      <span class="material-icons-sharp" style="color: aliceblue; margin:0  10px;">
+                          inventory_2
+                          </span>
+                      <a href="{% url 'inventariodash' %}">Inventario</a>
+                  </div>
+                  <div class="box_dash">
+                      <span class="material-icons-sharp" style="color: aliceblue; margin:0  10px;">
+                          extension
+                          </span>
+                      <a href="{% url 'elementosdash' %}">Elementos</a>
+                  </div>
+                  <div class="box_dash">
+                      <span class="material-icons-sharp" style="color: aliceblue; margin:0  10px;">
+                          sync_alt
+                          </span>
+                      <a href="{% url 'transacciondash' %}">Transacciones</a>
+                  </div>
+              </div>
+                
+                <div class="dashboard2">
+                    <div class="vista_usuario">
+                        <div class="usuarios_dash">
+                            <!-- Area de notificaciones plantilla-->
+                            
+                {% if Prestamos  %}
+                    
+                        {% for Prestamos  in Prestamos %}
+                            {% if Prestamos.estadoPrestamo == 'ACTIVO' or Prestamos.estadoPrestamo == 'Vencido'  %}
+                            <div class="area-notificaciones">                                                                                           
+                                <div class="contenido-notificaciones">
+                                    <div class="logo-notificaciones">
+                                        <img src="{% static 'img/notificaciones.png' %}" alt="" class="logo-notificaciones">
+                                        <!-- Acciones Notificaciones-->
+                                        
+                                    </div>
+                                      
+                                    <div class="acciones">
+                                      <button
+                                      title="Visualizar Prestamo" onclick="openModal('{{Prestamos.nombreRecibe.nombres}} {{Prestamos.nombreRecibe.apellidos}} ,{{Prestamos.fechaDevolucion}}, {{ Prestamos.serialSenaElemento.producto.nombre }}, {{Prestamos.observacionesPrestamo}}  ')",>          
+                                        <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="m62 32s-10.1 20-30 20-30-20-30-20 10.1-20 30-20 30 20 30 20" fill="#231f20" />
+                                          <path d="m57 32s-8.4 16.7-25 16.7-25-16.7-25-16.7 8.4-16.7 25-16.7 25 16.7 25 16.7z" fill="#fff" />
+                                          <path d="m45.4 32c0 7.5-6 13.5-13.5 13.5s-13.5-6-13.5-13.5 6-13.5 13.5-13.5 13.5 6 13.5 13.5"
+                                            fill="#42ade2" />
+                                          <path d="m39.4 32c0 4.1-3.4 7.5-7.5 7.5s-7.5-3.4-7.5-7.5 3.4-7.5 7.5-7.5 7.5 3.4 7.5 7.5"
+                                            fill="#231f20" />
+                                        </svg>
+                                      </button>
+
+                                        {% if request.user.cuentadante == 'superAdmin' or request.user.cuentadante == 'adminD'  %}
+
+                                        <a href="{% url 'editarPrestamo_view' id=Prestamos.id %}"><img src="{% static 'img/editar.png' %}" title="Editar Prestamo" alt="" class=""></a>
+                                
+                                        
+
+                                        <form id="miFormulario" method="post" action="{% url 'finalizarPrestamo_view' id=Prestamos.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="txt_nuevo_estado" value="Finalizado">
+                                            
+                                            
+                                        </form>
+                                        
+                                    </div>
+
+                                        <form  id="enviarCorreoForm"  method="post" action="{% url 'enviar_correo_desde_boton' id=Prestamos.id %}">
+                                            {% csrf_token %}
+                                            <div class="recordar">
+                                                <button title="Notificar al EMAIL" type="submit" onclick="mostrarSweetAlert()" class="recordar" >Recordar</button>
+                                            </div>
+                                            
+                                        </form>
+                                        {% endif %}
+
+                                    <div class="caja-texto-notificaciones">
+                                        <div>
+                                            <h2>{{ Prestamos.fechaDevolucion }} <br>
+                                              {{ Prestamos.nombreRecibe.nombres }} {{ Prestamos.nombreRecibe.apellidos }}: <br>
+                                            </h2>                                                
+                                            <p>{{ Prestamos.serialSenaElemento.producto.nombre }}</p>
+                                            <p>{{ Prestamos.observacionesPrestamo }}</p>
+                                            <p>{{ Prestamos.estadoPrestamo }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                {% else %}
+                        <h1>NO TENEMOS PRESTAMOS PENDIENTES</h1>
+                {% endif %}
+                        
+                        </div>
+                    </div>
+        
+                    <div class="fechas">
+                        <div class="logo">
+                            <img src="{% static 'img/imgdashboard/senaL.png' %}" alt="" width="100px">
+                        </div>
+                        <div id="fechaHora">
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div id="userModal" class="modal">
+                    <div class="modal-content">
+                      <thead>
+                        <span class="close" onclick="closeModal()">&times;</span>
+                      </thead>
+                      <div id="userData">
+                        <h1> Información del prestamo</h1>
+                        <table class="tabla">                          
+                          <tr>
+                            <th>Fecha de Devolucion:</th>
+                            <td><input type="datetime" id="devolucionField" readonly></td>
+                          </tr>                          
+                          <tr>
+                            <th>Adquiriente:</th>
+                            <td><input type="text" id="adquirienteField" readonly></td>
+                          </tr>
+                          <tr>
+                            <th>Elemento:</th>
+                            <td><input type="text" id="serialField" readonly></td>
+                          </tr>
+                          <tr>
+                            <th>Observaciones:</th>
+                            <td><input type="text" id="observacionesField" readonly></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </section>
+            
+        <!-- fin Cotenido principal -->
+
+        {% endblock content %}
+
+
+
+{% block extrajs %}
+
+<script src="{% static 'js/dashboard.js' %}"></script>  
+<script src="{% static 'js/scriptConsultarUsuario.js' %}"></script>
+
+<script>
+  function mostrarSweetAlert() {
+      Swal.fire({
+          title: '¿Deseas notificar al usuario por correo?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, enviar correo',
+          cancelButtonText: 'Cancelar',
+          confirmButtonColor: "#fc7323",
+          iconColor: "#fc7323",
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Si el usuario confirma, envía el formulario
+              document.getElementById('enviarCorreoForm').submit();
+          }
+      });
+  }
+</script>
+  
+{% endblock extrajs %}
+  
+   

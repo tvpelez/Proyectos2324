@@ -1,0 +1,120 @@
+    {% extends "../superAdmin/basesuadmin.html" %}
+
+    {% load static %}
+
+    {% block title %}
+        DashInventario
+    {% endblock title %}
+
+    {% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/reporteprestamo.css' %}">
+    {% endblock extrastyle %}
+
+    {% block content %}
+        <section class="consultar_reporte">
+            <div class="reporte_inventario">
+                <h1>Elementos de bajas</h1>
+            </div>
+            <form method="GET" action="{% url 'reporteelementosbajas' %}" onsubmit="return validarFechas()">
+                <div class="tabla_dinamica">
+                    <div class="fecha_reporte">
+                        <div class="fechas">
+                            <label for="fecha_inicio">Fecha inicio</label>
+                            <input type="date" name="fecha_inicio" id="fecha_inicio" placeholder="fecha inicio">
+                        </div>
+                        <div class="fechas">
+                            <label for="fecha_fin">Fecha fin</label>
+                            <input type="date" id="fecha_fin" placeholder="fecha fin" name="fecha_fin">
+                        </div>
+                        <button type="submit" class="boton_reporte">Filtrar Fecha</button>
+                        <a href="{% url 'generar_pdf' %}" onclick="return validarFechasGenerarReporte()">
+                            <button class="boton_reporte">Generar reporte</button>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="tabla_reporte">
+                <table>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>nombre del elemento</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th>Serial</th>
+                        <th>Cantidad</th>
+                        <th>Valor unidad</th>
+                        <th>Descripcion</th>
+                        <th>Observacion</th>
+                    </tr>
+                    {% for elemento in ElementosDevolutivos %}
+
+                        {% if elemento.producto.estado == 'B' or elemento.producto.estado == 'Baja' %}
+
+                        <tr>
+                            <td>{{ elemento.fecha_Registro }}</td>
+                            <td>{{ elemento.producto.nombre }}</td>
+                            <td>Devolutivo</td>
+                            <td> Baja </td>
+                            <td>{{ elemento.serial }}</td>
+                            <td>1</td>
+                            <td>{{ elemento.producto.valor_unidad }}</td>
+                            <td>{{ elemento.producto.descripcion }}</td>
+                            <td>{{ elemento.observacion }}</td>
+                        </tr>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    {% for elemento in ElementosConsumibles %}
+
+                        {% if elemento.productoConsumible.estadoElemento == 'B' or elemento.productoConsumible.estadoElemento == 'Baja' %}
+
+                        <tr>
+                            <td>{{ elemento.fechaAdquisicion }}</td>
+                            <td>{{ elemento.productoConsumible.nombreElemento }}</td>
+                            <td>{{ elemento.productoConsumible.categoriaElemento }}</td>
+                            <td>{{ elemento.productoConsumible.estadoElemento }}</td>
+                            <td>--</td>
+                            <td>{{ elemento.cantidadElemento }}</td>
+                            <td>{{ elemento.productoConsumible.costoUnidadElemento }}</td>
+                            <td>{{ elemento.productoConsumible.descripcionElemento }}</td>
+                            <td>{{ elemento.observacionElemento }}</td>
+                        </tr>
+                        {% endif %}
+
+                    {% endfor %}
+                </table>
+            </div>
+        </section>
+    {% endblock content %}
+
+    {% block extrajs %}
+    <script>
+        function validarFechas() {
+            var fechaInicio = document.getElementById('fecha_inicio').value;
+            var fechaFin = document.getElementById('fecha_fin').value;
+
+            // Verificar si ambas fechas están llenas
+            if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+                alert('Por favor, ingrese ambas fechas.');
+                return false; // Evitar el envío del formulario
+            }
+
+            // Si ambas fechas están llenas, permitir el envío del formulario
+            return true;
+        }
+
+        function validarFechasGenerarReporte() {
+            var fechaInicio = document.getElementById('fecha_inicio').value;
+            var fechaFin = document.getElementById('fecha_fin').value;
+
+            if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+                alert('Por favor, seleccione ambas fechas para generar el reporte.');
+                return false; // Evitar la generación del reporte
+            }
+
+            return true;
+        }
+    </script>
+    {% endblock extrajs %}

@@ -1,0 +1,104 @@
+{% extends '../superAdmin/basesuadmin.html' %}
+
+{% load static %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesEditarElemento.css' %}">
+{% endblock extrastyle %}
+
+{% block title %}
+Editar Elemento
+{% endblock title %}
+
+<!-- Inicio del Forumlario-->
+{% block content %}
+
+<h1 class="title">Editar Elemento Devolutivos</h1>
+<div class="signupFrm">
+    <form action="/actualizarElementoDevolutivo/{{ inventario_elemento.serial }}"  method="POST" class="form">
+        {%  csrf_token %}
+        <div class="container-1">
+            <div class="fechaContainer">
+                <input type="date" name="txt_fechaAdquisicion" class="inputform" placeholder="fechaAdquisicion" value= "{{ inventario_elemento.fecha_Registro|date:'Y-m-d' }}" name="txt_fechaAdquisicion" required>
+                <label for="fechaAdquisicion" class="labelform">Fecha</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="nombre_elemento" value="{{ inventario_elemento.producto.nombre }}"  name="txt_nombreElemento" required>
+                <label for="nombreElemento" class="labelform">Nombre</label>
+            </div>
+            <div class="selectContainer">
+                <label for="categoriaElemento" class="labelformselect">Categoria</label>
+                <div>
+                    <select class="selector" readonly name="txt_categoriaElemento" id="categoriaElemento">
+                        <option default="D" value="D">Devolutivo</option>
+                        
+
+                    </select>
+                </div>
+            </div>
+            <div class="selectContainer">
+                <label for="estadoElemento" class="labelformselect">Estado</label>
+                <div>
+                    <select class="selector" name="txt_estadoElemento" id="estadoElemento">
+                        <option hidden value="estadoElemento">{% if inventario_elemento.producto.estado == 'D' or inventario_elemento.producto.estado == 'Disponible' %} Disponible {% elif inventario_elemento.producto.estado == 'G' or inventario_elemento.producto.estado == 'Garantia' %} Garantia {% elif inventario_elemento.producto.estado == 'B' or inventario_elemento.producto.estado == 'Baja' %} Baja {% elif inventario_elemento.producto.estado == 'P' or inventario_elemento.producto.estado == 'Prestamo' %} Prestamo  {% endif %}</option>
+                        <option value="Disponible"  >Disponible</option>
+                        <option value="Garantia"  >Garantia</option>
+                        <option value="Baja"  >Baja</option>
+                        <option value="Prestamo"  >Prestamo</option>
+                    </select>
+                </div>
+            </div>
+            <div hidden class="selectContainer">
+                <input type="number" class="inputcantidad" name="txt_cantidadElemento" value="{{ inventario_elemento.cantidad }}" id="descripcion_elemento">
+                <label for="cantidadElemento" disabled  class="labelcantidad">1</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputformvalor" placeholder="a" name="txt_valorUnidadElemento" value="{{ inventario_elemento.producto.valor_unidad }}" id="valorUnidad">
+                <label for="valorUnidadElemento" class="labelformvalor">Valor Unidad</label>
+            </div>
+
+            <div hidden class="inputContainervalor">
+                <input type="text" class="inputformvalor" placeholder="a" name="txt_valorTotalElemento" id="valorTotalElemento" value="{{ inventario_elemento.producto.valor_unidad }}"  readonly>
+                <label for="valorTotalElemento" class="labelformvalor">Valor Total</label>
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="inputContainer">
+                <input type="text" class="inputform"  placeholder="id" name="txt_serial" value="{{ inventario_elemento.serial }}" required readonly>
+                <label for="serialSenaElemento" class="labelform">Serial Sena ####</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="a" name="txt_descripcionElemento" value="{{inventario_elemento.producto.descripcion}}" required>
+                <label for="descripcionElemento" class="labelform">Descripción</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="a" name="txt_observacionElemento" value="{{inventario_elemento.observacion}}" required>
+                <label for="observacionElemento" class="labelform">Observaciones</label>
+            </div>
+            <div class="selectorimagen">
+                <input type="file" accept="image/*" class="inputsubirfoto" name="txt_facturaElemento" value="{{inventario_elemento.factura}}" >
+                <label for="facturaElemento" class="labelsubirfoto">Adjuntar Soporte</label>
+
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="container-botones">
+                <button type="" class="submitBtn">GUARDAR</button>
+                <button type="button" class="submitBtn" id="cancelBtn"><span>CANCELAR</span>
+
+            </div>
+        </div>
+    </form>
+</div>
+</section>
+{% block extrajs %}
+<script>
+    document.getElementById("cancelBtn").onclick = function() {
+      window.location.href = "/consultarElementos/";
+    };
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{% static 'js/calculoTotal.js'%}"></script>
+{% endblock extrajs %}
+{% endblock %}

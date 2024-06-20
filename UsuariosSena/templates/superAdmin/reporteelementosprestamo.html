@@ -1,0 +1,111 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    DashInventario
+{% endblock title %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/reporteprestamo.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+
+    <section class="consultar_reporte">
+        <div class="reporte_inventario">
+            <h1>Elementos en prestamo</h1>
+        </div>
+        <form method="GET" action="{% url 'reporteelementosprestamos' %}" onsubmit="return validarFechas()">
+            <div class="tabla_dinamica">
+                <div class="fecha_reporte">
+                    <div class="fechas">
+                        <label for="fecha_inicio">Fecha inicio</label>
+                        <input type="date" name="fecha_inicio" placeholder="fecha inicio">
+                    </div>
+                    
+                    <div class="fechas">
+                        <label for="fecha_fin">Fecha fin</label>
+                        <input type="date" placeholder="fecha fin" name="fecha_fin">
+                    </div>
+                    <a href="#"><button type="submit" class="boton_reporte">Filtrar Fecha</button></a>
+    
+                    
+                </div>
+            </form> 
+
+        
+        
+            <div class="tabla_reporte">
+                <table>
+                    <tr>
+                        <th>Fecha Entrega</th>
+                        <th>Fecha Devolucion</th>
+                        <th>nombre del elemento</th>
+                        <th>Serial</th>
+                        <th>Estado Prestamo</th>
+                        <th>Emisor</th>
+                        <th>Adquiriente</th>                        
+                        <th>Valor unidad</th>
+                        <th>Observacion</th>
+
+                    </tr>
+                    {% for prestamo in prestamos %}
+                    <tr>
+                        <td>{{ prestamo.fechaEntrega }}</td>
+                        <td>{{ prestamo.fechaDevolucion }}</td>
+                        <td>{{ prestamo.nombreElemento }}</td>
+                        <td>{{ prestamo.serialSenaElemento }}</td>
+                        <td>{{ prestamo.estadoPrestamo }}</td>
+                        <td>{{ prestamo.nombreEntrega }}</td>
+                        <td>{{ prestamo.nombreRecibe }}</td>
+                        <td>{{ prestamo.valorUnidadElemento }}</td>
+                        <td>{{ prestamo.observacionesPrestamo }}</td>
+                        
+
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+        
+
+            
+            
+        </div>
+    </section>
+
+    {% endblock content %}
+
+    {% block extrajs %}
+    <script>
+    function validarFechas() {
+        var fechaInicio = document.getElementsByName('fecha_inicio')[0].value;
+        var fechaFin = document.getElementsByName('fecha_fin')[0].value;
+    
+        // Verificar si ambas fechas están llenas
+        if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+            alert('Por favor, ingrese ambas fechas.');
+            return false; // Evitar el envío del formulario
+        }
+    
+        // Si ambas fechas están llenas, permitir el envío del formulario
+        return true;
+    }
+    
+    function validarFechasGenerarReporte() {
+        var fechaInicio = document.getElementsByName('fecha_inicio')[0].value;
+        var fechaFin = document.getElementsByName('fecha_fin')[0].value;
+    
+        if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+            alert('Por favor, seleccione ambas fechas para generar el reporte.');
+            return false; // Evitar la generación del reporte
+        }
+    
+        return true;
+    }
+    </script>
+    {% endblock extrajs %}
+    

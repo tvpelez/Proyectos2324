@@ -1,0 +1,119 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    DashInventario
+{% endblock title %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/reporteprestamo.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+
+    <section class="consultar_reporte">
+        <div class="reporte_inventario">
+            <h1>Elementos activos</h1>
+        </div>
+        <div class="tabla_dinamica">
+            <form method="GET" action="{% url 'reporteelementosactivos' %}" onsubmit="return validarFechas()">
+                <div class="fecha_reporte">
+                    <div class="fechas">
+                        <label for="fecha_inicio">Fecha inicio</label>
+                        <input type="date" name="fecha_inicio" id="fecha_inicio" placeholder="fecha inicio">
+                    </div>
+                    
+                    <div class="fechas">
+                        <label for="fecha_fin">Fecha fin</label>
+                        <input type="date" id="fecha_fin" placeholder="fecha fin" name="fecha_fin">
+                    </div>
+                    
+                    <button type="submit" class="boton_reporte">Filtrar Fecha</button>
+                                    </div>
+            </form>            
+            <div class="tabla_reporte">
+                <table>
+                    <tr>
+
+                        <th>nombre del elemento</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th>Descripcion</th>
+                        <th>Serial</th>
+                        <th>Observaciones</th>
+                        
+                    </tr>
+                    {% for elemento in ElementosDevolutivos %}
+                        
+                        {% if elemento.producto.estado == 'D' or elemento.producto.estado == 'Disponible' %}
+
+                    <tr>
+                        <td>{{ elemento.producto.nombre }}</td>
+                        {% if elemento.producto.categoria == 'D' or elemento.producto.categoria == 'Devolutivo' %}
+                        <td> Devolutivo </td>
+                        {% endif %}
+                        <td>Disponible</td>
+                        <td>{{ elemento.producto.descripcion }}</td>
+                        <td>{{ elemento.serial }}</td>
+                        <td>{{ elemento.observacion }}</td>                                                    
+                    </tr>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    {% for elemento in ElementosConsumibles %}
+                        
+                    {% if elemento.productoConsumible.estadoElemento == 'D' or elemento.productoConsumible.estadoElemento == 'Disponible' %}
+
+                <tr>
+                    <td>{{ elemento.productoConsumible.nombreElemento }}</td>
+                    {% if elemento.productoConsumible.categoriaElemento == 'C' or elemento.productoConsumible.categoriaElemento == 'Consumible' %}
+                    <td> Consumible </td>
+                    {% endif %}
+                    <td>Disponible</td>
+                    <td>{{ elemento.productoConsumible.descripcionElemento }}</td>
+                    <td>{{ elemento.cantidadElemento }}</td>
+                    <td>{{ elemento.observacionElemento }}</td>                                                
+                </tr>
+                {% endif %}
+
+                {% endfor %}
+                </table>
+            </div>            
+        </div>
+    </section>
+
+    {% endblock content %}
+
+{% block extrajs %}
+<script>
+function validarFechas() {
+    var fechaInicio = document.getElementById('fecha_inicio').value;
+    var fechaFin = document.getElementById('fecha_fin').value;
+
+    // Verificar si ambas fechas están llenas
+    if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+        alert('Por favor, ingrese ambas fechas.');
+        return false; // Evitar el envío del formulario
+    }
+
+    // Si ambas fechas están llenas, permitir el envío del formulario
+    return true;
+}
+function validarFechasGenerarReporte() {
+            var fechaInicio = document.getElementById('fecha_inicio').value;
+            var fechaFin = document.getElementById('fecha_fin').value;
+
+            if (fechaInicio.trim() === '' || fechaFin.trim() === '') {
+                alert('Por favor, seleccione ambas fechas para generar el reporte.');
+                return false; // Evitar la generación del reporte
+            }
+
+            return true;
+        }
+</script>
+
+{% endblock extrajs %}

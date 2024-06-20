@@ -1,0 +1,98 @@
+{% extends '../superAdmin/basesuadmin.html' %}
+
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/superAdmin/stylesEditarElemento.css' %}">
+{% endblock extrastyle %}
+
+{% block title %}
+Editar Elemento
+{% endblock title %}
+
+<!-- Inicio del Formulario -->
+{% block content %}
+
+<h1 class="title">Editar Elemento Consumible</h1>
+<div class="signupFrm">
+    <form action="." method="POST" class="form">
+        {% csrf_token %}
+        <div class="container-1">
+            <div class="fechaContainer">
+                <input type="date" class="inputform" placeholder="fechaAdquisicion" value="{{ elemento.fechaAdquisicion|date:'Y-m-d' }}" name="txt_fechaadquisicion" required>
+                <label for="fechaAdquisicion" class="labelform">Fecha</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="nombre_elemento" value="{{ elemento.productoConsumible.nombreElemento }}" name="txt_nombreElemento" required>
+                <label for="nombreElemento" class="labelform">Nombre</label>
+            </div>
+            <div class="selectContainer">
+                <label for="categoriaElemento" class="labelformselect">Categoria</label>
+                <div>
+                    <select readonly class="selector" name="txt_categoriaElemento" id="categoriaElemento">
+                       
+                        <option value="C" {% if elemento.categoriaElemento == 'C' %} selected {% endif %}>Consumible</option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectContainer">
+                <label for="estadoElemento" class="labelformselect">Estado</label>
+                <div>
+                    <select class="selector" name="txt_estadoElemento" id="estadoElemento">
+                        <option value="D" {% if elemento.estadoElemento == 'D' %} selected {% endif %}>Disponible</option>
+                        <option value="A" {% if elemento.estadoElemento == 'A' %} selected {% endif %}>Agotado</option>
+                        <option value="B" {% if elemento.estadoElemento == 'B' %} selected {% endif %}>Baja</option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectContainer">
+                <input type="number" class="inputcantidad" name="txt_cantidadElemento" value="{{ elemento.cantidadElemento }}" id="descripcion_elemento">
+                <label for="cantidadElemento" class="labelcantidad">Cantidad</label>
+            </div>
+            <div class="inputContainervalor">
+                <input type="text" class="inputformvalor" placeholder="a" name="txt_costoUnidadElemento" value="{{ elemento.productoConsumible.costoUnidadElemento }}" id="valorUnidad">
+                <label for="costoUnidadElemento" class="labelformvalor">Costo Unidad</label>
+            </div>
+
+            <div class="inputContainervalor">
+                <input type="text" class="inputformvalor" placeholder="a" name="txt_costoTotalElemento" id="costoTotalElemento" value="{{ elemento.costoTotalElemento }}" readonly>
+                <label for="costoTotalElemento" class="labelformvalor">Costo Total</label>
+            </div>
+        </div>
+        <div class="container-1">
+            <div hidden class="inputContainer">
+                <input type="text" class="inputform" placeholder="id" name="txt_serial" value="{{ elemento.id }}" required >
+                <label for="serialSenaElemento" class="labelform">ID</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="a" name="txt_descripcionElemento" value="{{ elemento.productoConsumible.descripcionElemento }}" required>
+                <label for="descripcionElemento" class="labelform">Descripción</label>
+            </div>
+            <div class="inputContainer">
+                <input type="text" class="inputform" placeholder="a" name="txt_observacionElemento" value="{{ elemento.observacionElemento }}" required>
+                <label for="observacionElemento" class="labelform">Observaciones</label>
+            </div>
+            <div class="selectorimagen">
+                <input type="file" accept="image/*" class="inputsubirfoto" name="txt_facturaElemento" value="{{ elemento.facturaElemento }}" >
+                <label for="facturaElemento" class="labelsubirfoto">Adjuntar Soporte</label>
+            </div>
+        </div>
+        <div class="container-1">
+            <div class="container-botones">
+                <button type="submit" class="submitBtn">GUARDAR</button>
+                <button type="button" class="submitBtn" id="cancelBtn"><span>CANCELAR</span>
+                </div>
+        </div>
+    </form>
+</div>
+</section>
+{% block extrajs %}
+<script>
+    document.getElementById("cancelBtn").onclick = function() {
+      window.location.href = "/consultarElementos/";
+    };
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="{% static 'js/calculoTotal.js'%}"></script>
+{% endblock extrajs %}
+{% endblock %}

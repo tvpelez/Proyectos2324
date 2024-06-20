@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "xlsxwriter"
+    ],
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "DonProyecto",
+            "database": "${workspaceFolder:DonProyecto}/db.sqlite3"
+        }
+    ]
+}

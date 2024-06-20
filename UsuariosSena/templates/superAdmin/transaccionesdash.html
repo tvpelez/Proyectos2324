@@ -1,0 +1,71 @@
+{% extends "../superAdmin/basesuadmin.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    Transacciones
+{% endblock title %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/superAdmin/inventariodash2.css' %}">
+{% endblock extrastyle %}
+    
+
+{% block content %}
+    
+    <section class="dashboard"> 
+        <h1>Transacciones</h1>
+        <div class="caja_dash">
+            <a class="box_dash" href="{% url 'usuariodash' %}">
+                <p>Usuarios</p>
+                </a>
+            <a class="box_dash" href="{% url 'inventariodash' %}">
+                <p>Inventario</p>
+                </a>
+            <a class="box_dash " href="{% url 'elementosdash' %}">
+                <p>Elementos</p>
+                </a>
+            <a class="box_dash click" href="{% url 'transacciondash' %}">
+                <p>Transacciones</p>
+            </a>
+        </div>
+        <div class="dashboard2">
+            <div class="listaopciones">
+                <div class="opciones">
+                    {% if request.user.cuentadante == 'superAdmin' or request.user.cuentadante == 'adminD'  %}
+                    <a class="opcion1" href="{% url 'formPrestamosDevolutivos_view' %}">
+                        Crear Prestamo
+                    </a>
+                    <a class="opcion2" href="{% url 'formEntregasConsumibles_view' %}">
+                        Crear Entrega
+                    </a>
+
+                    {% endif %}
+                        
+                    <a class="opcion3" href="{% url 'consultarTransacciones' %}">
+                        Consultar Transacciones
+                    </a>
+                </div>
+            </div>
+            <div class="fechas">
+                <div class="logo">
+                    <img src="{% static 'img/imgdashboard/senaL.png' %}" alt="" width="100px">
+                </div>
+                <div id="fechaHora">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    {% block extrajs %}
+    <script src="{% static 'js/usuariodash.js' %}"></script>    
+    {% endblock extrajs %}
+        
+    
+
+
+    {% endblock content %}

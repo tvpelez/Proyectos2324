@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins";
+    text-decoration: none;
+}
+
+
+.dashboard{
+    margin: 20px;
+}
+#fechaHora{
+    background-color: #e37226;
+    padding: 15px;
+    border-radius: 10px;
+    color: #fff;
+    box-shadow: 1px 4px 2px #b0afaf;
+    cursor: pointer;
+    transition: 0.5s;
+    margin-top: 60px;
+}
+
+
+.dashboard h1{
+    padding: 20px 40px;
+    font-size: 2rem;
+}
+.caja_dash{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: 30px 20px 0;
+    align-items: center;
+    text-align: center;
+}
+
+.box_dash{
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    padding:20px 1px;
+    background: #fc7323;
+    box-shadow: 1px 2px 1px #b0afaf;
+    border-radius: 5px;
+    transition: 0.5s;
+    cursor: pointer;
+    
+}
+
+.box_dash:hover{
+    transform: scale(1.1);
+    box-shadow: none;
+    
+    
+}
+
+.box_dash a{
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.dashboard2{
+    display: grid;
+    width: 100%;
+    height: 50vh;
+    grid-template-columns: 1fr 0.5fr;
+    justify-content: center;
+    
+    
+}
+
+.fechas{
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard2 table{
+    width: 100%;
+    margin: 30px 0;
+    text-align: center; 
+    border-collapse: collapse;
+    
+    
+}
+
+.vista_usuario{
+    overflow: auto;
+    overflow-x: hidden;
+    border-radius: 10px;
+    margin: 40px 20px;
+    background: #ffffff;
+    box-shadow: 1px 2px 1px #b9b9b9;
+    transition: 0.5s;
+    
+}
+.vista_usuario:hover{
+    box-shadow: none;
+}
+::-webkit-scrollbar {
+    width: 5px; 
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff; 
+    border-radius: 20px;
+    margin: 30px 0;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #000000; 
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+
+
+.dashboard2 table td{
+    padding: 20px 0;    
+    border-bottom: solid 1px #e0e0e0;
+    cursor: pointer;
+    
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard2 {
+        grid-template-columns: 1fr;
+    }
+    .fechas {
+        display: none !important;
+    }
+    .listaopciones {
+        width: auto;
+    }
+
+    .caja_dash {
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+        align-items: center;
+        text-align: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        
+    }
+    .box_dash {
+        width: 35%;
+        margin: 10px;
+        padding: 15px;
+    }
+    .opciones a {
+        padding: 3px;
+        width: 90%;
+        font-size: small;
+    }
+}

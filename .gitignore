@@ -1,0 +1,6 @@
+__pycache__/
+db.sqlite3
+migrations
+venv
+*.pyc
+UsuariosSena/migrations/0001_initial.py

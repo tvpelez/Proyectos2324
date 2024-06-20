@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <link rel="stylesheet" href="{% static '../static/css/styleLogin.css' %}" />
+</head>
+
+<body>
+    <header>
+        <div class="header-img">
+            <img src="{% static 'img/imgLogin/senaL.png'%}" />
+        </div>
+        <img src="{% static 'img/imgLogin/Copia de LOGO SSIH.svg' %}" class="banner" />
+    </header>
+    <nav>
+        <div>
+            <ul>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+            </ul>
+        </div>
+    </nav>
+    <section id="centrar">
+        <div class="form-container">
+            <div class="MainTitle">
+                <img src="{% static 'img/imgLogin/sena1_low.png' %}" class="logo" />
+                <h1>Ingreso Usuarios Registrados</h1>
+            </div>
+            <form class="loginForm" method="post">
+                {% csrf_token %}
+                <div class="control">
+                    <label for="id-type">Tipo de identificación:</label>
+                    <div class="select-container">
+                        <select id="id-type" name="id-type">
+                            <option value="cc">Cédula de ciudadanía</option>
+                            <option value="ti">Tarjeta de identidad</option>
+                            <option value="ce">Cédula de extranjería</option>
+                        </select>
+                        <div class="icon-container">
+                            <i class="fa fa-id-card icon"></i>
+                        </div>
+                    </div>
+
+                    <label for="numeroIdentificacion" class="labelInputs">Número Documento:</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="numeroIdentificacion" name="numeroIdentificacion"
+                            placeholder="Número de documento" required />
+                        <i class="fa fa-user icon"></i>
+                    </div>
+
+
+                    <label for="password" class="labelInputs">Contraseña:</label>
+                    <div class="input-with-icon">
+                        <input type="password" id="password" name="password" placeholder="Contraseña" required />
+                        <i class="fa fa-lock icon"></i>
+                        <span class="toggle-password"><i class="fas fa-eye"></i></span>
+                    </div>
+
+                </div>
+
+                <span><input type="checkbox" class="accent-green" /> Recordar Contraseña.</span>
+
+                <div class="control">
+                    <input type="submit" value="Ingresar" />
+                </div>
+
+            </form>
+            <div class="link">
+                <a href="{% url 'password_reset' %}">¿Has olvidado tu contraseña?</a>
+            </div>
+        </div>
+
+    </section>
+
+    <script src="{% static 'js/scriptLogin.js' %}"></script>
+    <footer>
+    </footer>
+    <div class="version">
+        <img src="{% static 'img/imgLogin/Smart.png' %}" alt="Version" id="version-image" />
+    </div>
+</body>
+
+</html>
